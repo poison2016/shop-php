@@ -13,5 +13,6 @@ return [
     ],
 
     'subscribe' => [
+        'OrderSub' => \app\subscribe\OrderSub::class,  //订单相关订阅事件
     ],
 ];

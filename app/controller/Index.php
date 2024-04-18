@@ -3,16 +3,21 @@
 namespace app\controller;
 
 use app\BaseController;
+use app\Request;
+use app\validate\FilterValid;
 
 class Index extends BaseController
 {
-    public function index()
-    {
-        return '<style>*{ padding: 0; margin: 0; }</style><iframe src="https://www.thinkphp.cn/welcome?version=' . \think\facade\App::version() . '" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>';
-    }
 
-    public function hello($name = 'ThinkPHP8')
+
+    public function hello(Request $request)
     {
-        return 'hello,' . $name;
+        $params['user_id'] = $request->comUserId;
+        $params['parent_id'] = input('parent_id','');
+        $rule = [
+            'user_id' => ['must', '', 'token不能为空'],
+            'parent_id' => ['must', '', '上级ID不能为空'],
+        ];
+        FilterValid::filterData($params, $rule);
     }
 }

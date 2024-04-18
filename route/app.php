@@ -10,8 +10,36 @@
 // +----------------------------------------------------------------------
 use think\facade\Route;
 
-Route::get('think', function () {
-    return 'hello,ThinkPHP6!';
-});
 
-Route::get('hello/:name', 'index/hello');
+Route::group('index', function () {
+    Route::get('hello', '');
+})->prefix('index/');
+
+//图片上传
+Route::group('image', function () {
+    Route::post('upload', 'upload');
+})->prefix('image/');
+
+
+
+//登陆相关
+Route::group('signin', function () {
+    Route::post('login', 'login')->middleware('\app\middleware\Throttle');//登陆接口
+})->prefix('signin/');
+
+
+Route::group(function () {
+    // 订单相关
+    Route::group('order', function () {
+        Route::post('create', 'createOrder')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+
+    })->prefix('order/');
+
+})->middleware('\app\middleware\CheckToken');
+
+// 测试类，扔一些测试内筒
+Route::group('Test', function () {
+    Route::post('textScan', 'textScan');
+    Route::get('test', 'test');
+    Route::get('jdTest', 'jdTest');
+})->prefix('Test/');
