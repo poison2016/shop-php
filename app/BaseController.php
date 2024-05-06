@@ -5,6 +5,8 @@ namespace app;
 
 use think\App;
 use think\exception\ValidateException;
+use think\Response;
+use think\response\Jsonp;
 use think\Validate;
 
 /**
@@ -89,6 +91,28 @@ abstract class BaseController
         }
 
         return $v->failException(true)->check($data);
+    }
+
+    protected function requestData(array $data = [], string $type = 'json', string $callback = '')
+    {
+        if('jsonp' == $type){
+            return Jsonp::create($data, 'jsonp')->options(['default_jsonp_handler' => $callback]);
+        }
+        return Response::create($data, $type);
+    }
+    /**
+     * 过滤特殊字符,删除空格与回车,去除特殊字符
+     * @param $str
+     * @param int $status   是否过滤特殊字符:0否1是
+     * @return string|string[]
+     */
+    protected function replaceChar($str, $status = 0){
+        if ($status == 1) {
+            $regex = "/\/|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\'|\`|\-|\=|\\\|\|/";
+            $str = preg_replace($regex,"",$str);
+        }
+        $preg = [" ", "　", "\t", "\n", "\r"];
+        return str_replace($preg, '', $str);
     }
 
 }
