@@ -7,7 +7,7 @@ use app\BaseController;
 class Goods extends BaseController
 {
     public function list(){
-
+        return
     }
 
 }

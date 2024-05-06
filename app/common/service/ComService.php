@@ -4,13 +4,7 @@
 namespace app\common\service;
 
 
-use app\common\model\RegionModel;
-use app\common\model\StoresModel;
-use app\common\model\UserAddressModel;
-use app\common\model\UserChargeModel;
-use app\common\model\UserModel;
 use app\common\traits\CacheTrait;
-use Jormin\Dingtalk\Dingtalk;
 use think\facade\Db;
 use think\facade\Log;
 use think\Response;
@@ -34,72 +28,12 @@ class ComService
         return array('code' => $code, 'message' => $message, 'data' => $data);
     }
 
-    /**异常发送叮叮通知
-     * @param $message
-     * @param $ex
-     * @author Poison
-     * @date 2020/12/16 10:55 上午
-     */
-    public function sendDingError($message, $ex, $mobiles = [])
-    {
-        try {
-            //发送叮叮通知
-            $ding = new Dingtalk(config('ding_config.error_hook'));
-            $hostName = "【正式服】\n";
-            if (env('server_env') === 'dev') {
-                $hostName = "【测试服】\n";
-            }
-            $ding->sendText($hostName . $message . "\n 异常:\n" . $ex, $mobiles);
-        } catch (\Throwable $e) {
-
-        }
-    }
 
 
-    /**
-     * 异常发送叮叮通知Markdown类型
-     * @param $message
-     * @param $ex
-     * @author liyongsheng
-     * @date 2021/1/23 13:35
-     */
-    public function sendDingsendMarkdownError($title, $message)
-    {
-        try {
-            //发送叮叮通知
-            $ding = new Dingtalk(config('ding_config.error_hook'));
-            $hostName = "【正式服】";
-            if (env('server_env') === 'dev') {
-                $hostName = "【测试服】";
-            }
-            $ding->sendMarkdown($title, "## " . $hostName . " 请求信息为：\n" . $message);
-        } catch (\Throwable $e) {
-            trace('钉钉推送异常', 'error');
-            trace($e, 'error');
-        }
-    }
 
-    /**正常发送叮叮通知
-     * @param $message
-     * @param $mobile
-     * @param $http_adder
-     * @author Poison
-     * @date 2020/12/16 10:54 上午
-     */
-    public function sendDing($message, $mobile, $http_adder,$isAtAll = false)
-    {
-        try {
-            //发送叮叮通知
-            $ding = new Dingtalk($http_adder);
-            $hostName = "【正式服】\n\n";
-            if (env('server_env') === 'dev') {
-                $hostName = "【测试服】\n\n";
-            }
-            $ding->sendText($hostName . $message, $mobile,$isAtAll);
-        } catch (\Throwable $e) {
 
-        }
-    }
+
+
 
     public function getGoodsImg($goods_img, $width = 400, $height = 400)
     {
@@ -245,8 +179,6 @@ class ComService
      * @param $str
      * @param int $status
      * @return string|string[]
-     * @author Poison
-     * @date 2021/1/23 2:23 下午
      */
     public static function replaceChar($str, $status = 0){
         if ($status == 1) {
@@ -261,8 +193,6 @@ class ComService
      * @param $text
      * @param string $replaceTo
      * @return string|string[]|null
-     * @author Poison
-     * @date 2021/2/18 10:14 上午
      */
     public static function filterEmoji($text, $replaceTo = ''){
         $clean_text = "";
@@ -290,99 +220,4 @@ class ComService
         return $clean_text;
     }
 
-
-    /**
-     * 获取门店信息
-     * @param int $user_id  用户ID
-     * @return array
-     * @author yangliang
-     * @date 2021/2/20 16:06
-     */
-    public function getStores(int $user_id){
-        //验证用户是否有默认地址
-        $user_address = UserAddressModel::getAddress($user_id);
-        if(empty($user_address) || empty($user_address['lng']) || empty($user_address['lat'])){
-            return $this->error(2047, '请设置默认地址');
-        }
-        $res = StoresModel::getDistanceByShowAndType($user_address['lng'], $user_address['lat']);
-        if(!empty($res)){
-            foreach ($res as &$v){
-                $v['distance'] = sprintf('%d', $v['distance'] * 1000);
-            }
-        }
-        return $this->success(200, 'success', $res);
-    }
-
-
-    /**
-     * 获取所有地区信息
-     * @return array
-     * @author yangliang
-     * @date 2021/2/20 17:21
-     */
-    public function getRegions(){
-        return $this->success(200, 'success', RegionModel::getRegions());
-    }
-
-
-    /**
-     * 获取所有系统设定充值数额
-     * @return array
-     * @author yangliang
-     * @date 2021/2/23 14:24
-     */
-    public function getCharge(){
-        return $this->success(200, 'success', UserChargeModel::getList(1));
-    }
-
-
-    /**
-     * 用户浏览记录
-     * @param int $user_id
-     * @param $type
-     * @return array
-     * @author yangliang
-     * @date 2021/2/23 15:41
-     */
-    public function userTrace(int $user_id, $type){
-        $user_trace_key = 'user_trace_'. $user_id;
-        $exists_res =$this->existsCache($user_trace_key);
-        if($exists_res){
-            $user_trace = $this->getCache($user_trace_key);
-            $user_trace_arr = json_decode($user_trace, true);
-            $day = date('Y-m-d');
-            if(isset($user_trace_arr[$day])){
-                if (in_array($type, $user_trace_arr[$day]['type'])) {
-                    $traceCount = $user_trace_arr[$day]['trace'][$type][0] + 1;
-                    $traceTime = time();
-                    $user_trace_arr[$day]['trace'][$type] = [$traceCount, $traceTime];
-                } else {
-                    $user_trace_arr[$day]['type'][] = $type;
-                    $user_trace_arr[$day]['trace'][$type] = [1, time()];
-                }
-            }else{
-                $user_trace_arr[$day] = [
-                    'type' => [$type],
-                    'trace' => [
-                        $type => [1, time()]
-                    ]
-                ];
-            }
-
-            $this->setCache($user_trace_key, json_encode($user_trace_arr));
-        }else{
-            $traceDate = date('Y-m-d');
-            $userTraceVal = [
-                $traceDate => [
-                    'type' => [$type],
-                    'trace' => [
-                        $type => [1, time()]
-                    ]
-                ]
-            ];
-            $this->setCache($user_trace_key, json_encode($userTraceVal));
-        }
-
-        return $this->success(200, '操作成功');
-    }
 }
