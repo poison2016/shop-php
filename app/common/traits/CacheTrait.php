@@ -19,8 +19,6 @@ trait CacheTrait
      * 获取redis对象
      * @param array $conf
      * @return Redis
-     * @author qap <qiuapeng921@163.com>
-     * @date 19-5-9 上午11:38
      */
     private function getRedis($conf = [])
     {

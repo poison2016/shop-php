@@ -11,8 +11,6 @@ use Endroid\QrCode\QrCode;
  * @param array $header 请求头参数
  * @param array $certParam array  ['cert_path']    ['key_path']
  * @return array|string
- * @author yangliang
- * @date 2020/12/15 14:41
  */
 function curl_http($url, $isPostRequest = false, $data = [], $header = [], $certParam = [])
 {
@@ -76,13 +74,19 @@ function curl_http($url, $isPostRequest = false, $data = [], $header = [], $cert
     }
 }
 
+function tp_page(int $listRows = 10, int $page = 1): array
+{
+    return [
+        'list_rows' => (int)input('list_rows', $listRows),
+        'page' => (int)input('page', $page),
+    ];
+}
+
 
 /**
  * array转xml
  * @param array $arr
  * @return string
- * @author yangliang
- * @date 2020/11/25 13:43
  */
 function arrayToXml(array $arr): string
 {
@@ -104,8 +108,6 @@ function arrayToXml(array $arr): string
  * xml转array
  * @param string $xml
  * @return array
- * @author yangliang
- * @date 2020/11/25 15:00
  */
 function xmlToArray(string $xml): array
 {
@@ -120,8 +122,6 @@ function xmlToArray(string $xml): array
  * 获取当前访问用户的IP
  * @param bool $isInt
  * @return false|int|string
- * @author yangliang
- * @date 2020/11/27 15:40
  */
 function getClientIP($isInt = false)
 {
@@ -237,8 +237,6 @@ function getGoodsImg($goods_img, $width = 0, $height = 0)
  * @param $arr
  * @param $name
  * @return mixed
- * @author Poison
- * @date 2021/1/7 4:22 下午
  */
 function quickSort($arr, $name)
 {
@@ -279,8 +277,6 @@ function replaceChar($str, $status = 0)
  * @param null $filePath
  * @param int $size
  * @return string|void
- * @author yangliang
- * @date 2021/2/24 9:43
  */
 function createQrCode($data, $filePath = null, $size = 300)
 {
@@ -299,8 +295,6 @@ function createQrCode($data, $filePath = null, $size = 300)
  * 获取指定时间距现在多久
  * @param int|string $the_time 时间
  * @return string
- * @author yangliang
- * @date 2021/3/11 15:30
  */
 function time_tran($the_time)
 {
@@ -332,8 +326,6 @@ function time_tran($the_time)
  * @param string $message
  * @param int $code
  * @return array
- * @author Poison
- * @date 2021/4/13 2:49 下午
  */
 function successArray($data = [], $message = '提交成功', $code = 200)
 {
@@ -344,8 +336,6 @@ function successArray($data = [], $message = '提交成功', $code = 200)
  * @param string $message
  * @param int $code
  * @return array
- * @author Poison
- * @date 2021/4/13 2:50 下午
  */
 function errorArray($message = '提交失败', $code = 100)
 {
@@ -358,8 +348,6 @@ function errorArray($message = '提交失败', $code = 100)
  * @param string $t
  * @param int $n
  * @return array
- * @author yangliang
- * @date 2021/4/13 17:09
  */
 function get_date($date, $t = 'd', $n = 0)
 {
@@ -386,8 +374,6 @@ function get_date($date, $t = 'd', $n = 0)
 /**获取上级id
  * @param $topId
  * @return int
- * @author Poison
- * @date 2021/4/27 1:53 下午
  */
 function getTopId($topId): int
 {
@@ -405,8 +391,6 @@ function getTopId($topId): int
  * @param string $data 签名参数
  * @param string $pri_key_path 私钥路径
  * @return string
- * @author: yangliang
- * @date: 2021/5/25 16:43
  */
 function sign(string $data, string $pri_key_path): string
 {
@@ -425,8 +409,6 @@ function sign(string $data, string $pri_key_path): string
  * 拼接数组为字符串，k="v"&k="v"
  * @param $data
  * @return string
- * @author: yangliang
- * @date: 2021/5/25 17:20
  */
 function arrayToString($data): string
 {
@@ -445,8 +427,6 @@ function arrayToString($data): string
  * @param $sign
  * @param $pub_key_path
  * @return bool
- * @author: yangliang
- * @date: 2021/5/25 17:41
  */
 function checkSign($data, $sign, $pub_key_path): bool
 {

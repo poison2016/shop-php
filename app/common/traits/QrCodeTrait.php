@@ -35,8 +35,6 @@ trait QrCodeTrait
      * @param array $param
      * @param int $userId
      * @return string
-     * @author liyongsheng
-     * @date 2020/12/16 23:49
      */
     public function returnQrcodeImg(string $content = '这是二维码内容', array $param = [], int $userId = 0)
     {

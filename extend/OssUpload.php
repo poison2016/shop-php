@@ -45,8 +45,6 @@ class OssUpload
      * @param string $oss_path  图片路径
      * @param string $content  图片内容
      * @return array
-     * @author yangliang
-     * @date 2021/2/18 14:05
      */
     public function upload(string $oss_path, string $content):array
     {

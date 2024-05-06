@@ -12,8 +12,6 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
  * phpExxel操作类
  * Class PhpSpreadsheet
  * @package app\common\traits
- * @author liyongsheng
- * @date 2020/12/9 16:45
  */
 trait PhpSpreadsheetTrait
 {
@@ -25,8 +23,6 @@ trait PhpSpreadsheetTrait
      * @param array $keys $data中对应表头的键的数组，接受一个一维数组
      * @param string $fileType
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @author liyongsheng
-     * @date 2020/12/9 17:01
      */
     public function exportExcel(string $fileName = 'test', array $data = [], array $head = [], array $keys = [], string $fileType = 'Xlsx')
     {
