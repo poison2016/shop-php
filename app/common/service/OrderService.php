@@ -191,5 +191,19 @@ class OrderService extends ComService
         }
     }
 
+    public function getList(array $params){
+        $where['type'] = $params['type'];
+        $where['user_id'] = $params['user_id'];
+        $data = $this->orderModel->where($where)->paginate(tp_page())->each(function ($item){
+
+        });
+        return successArray($data);
+    }
+
+    public function getInfo(int $userId,int $orderId){
+        $data = $this->orderModel->where(['user_id'=>$userId,'id'=>$orderId])->find();
+        return successArray($data);
+    }
+
 
 }

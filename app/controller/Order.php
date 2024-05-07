@@ -31,5 +31,25 @@ class Order extends BaseController
         return $this->requestData($this->orderService->createOrder($params));
     }
 
+    public function list(Request $request){
+        $params['user_id'] = (int)$request->comUserId;
+        $rule = [
+            'user_id' => ['must', '', '请登录'],
+        ];
+        FilterValid::filterData($params, $rule);
+        return $this->requestData($this->orderService->getList($params));
+    }
+
+    public function info(Request $request){
+        $params['user_id'] = (int)$request->comUserId;
+        $params['order_id'] = (int)input('order_id',0);
+        $rule = [
+            'user_id' => ['must', '', '请登录'],
+            'order_id' => ['must', '', '订单id不能为空'],
+        ];
+        FilterValid::filterData($params, $rule);
+        return $this->requestData($this->orderService->getInfo($params['user_id'],$params['order_id']));
+    }
+
 
 }
