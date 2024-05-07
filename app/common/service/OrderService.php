@@ -82,7 +82,7 @@ class OrderService extends ComService
                 'yields'=>float_number_format($goodsInfo['yield'] + $level_interest),
                 'terms' =>$terms
             ];
-            $orderId = Db::name('contract_order')->insertGetId($insertOrderData);
+            $orderId = $this->orderModel->insertGetId($insertOrderData);
 
             if (!$orderId) {
                 Db::rollback();
@@ -131,23 +131,23 @@ class OrderService extends ComService
             }
 
 
-            Db::name('contract')->where('id', $id)->dec('surplus', $number)->update();
+            $this->goodsModel->where('id', $id)->dec('surplus', $number)->update();
             //如果有优惠券 核销
-            if ($couponId) {
-                $ret = Db::name('coupon')->where('id', $couponId)->update(
-                    [
-                        'state' => 1,
-                        'update_time' => getDataTime(),
-                        'update_user' => $uid
-                    ]
-                );
-                if (!$ret) {
-                    Db::rollback();
-                    return errorArray('订单创建失败 错误码-ORDER-1014');
-                }
-            }
+//            if ($couponId) {
+//                $ret = Db::name('coupon')->where('id', $couponId)->update(
+//                    [
+//                        'state' => 1,
+//                        'update_time' => getDataTime(),
+//                        'update_user' => $uid
+//                    ]
+//                );
+//                if (!$ret) {
+//                    Db::rollback();
+//                    return errorArray('订单创建失败 错误码-ORDER-1014');
+//                }
+//            }
             //降低用户余额 增加消费额度
-            $ret = Db::name('user')->where('id', $uid)
+            $ret = $this->userModel->where('id', $uid)
                 ->update([
                     'money' => $userData['money'] - $payPrice,
                     'pay_money' => $userData['pay_money'] + $payPrice,
