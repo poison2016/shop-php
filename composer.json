@@ -35,7 +35,8 @@
         "aliyuncs/oss-sdk-php": "^2.3",
         "topthink/think-queue": "^3.0",
         "ext-bcmath": "*",
-        "topthink/think-throttle": "^2.0"
+        "topthink/think-throttle": "^2.0",
+        "ext-redis": "*"
     },
     "require-dev": {
         "symfony/var-dumper": ">=4.2",
