@@ -24,7 +24,7 @@ class Goods extends BaseController
     }
 
     public function info(Response $request){
-        $params['id'] = (int)input('id','');
+        $params['id'] = (int)input('goods_id','');
         $rule = [
             'id' => ['must', '', '商品不能为空'],
         ];
