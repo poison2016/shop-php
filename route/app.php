@@ -20,6 +20,12 @@ Route::group('image', function () {
     Route::post('upload', 'upload');
 })->prefix('image/');
 
+Route::group('apis/goods', function () {
+    Route::post('list','list');
+    Route::post('info','info');
+
+})->prefix('apis/goods/');
+
 
 
 //登陆相关
