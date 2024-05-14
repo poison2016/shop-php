@@ -6,6 +6,6 @@ use think\Model;
 
 class OrderModel extends Model
 {
-    protected $name = '';
+    protected $name = 't_goods_order';
 
 }

@@ -6,6 +6,6 @@ use think\Model;
 
 class GoodsModel extends Model
 {
-    protected $name = '';
+    protected $name = 't_goods';
 
 }

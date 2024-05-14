@@ -23,7 +23,11 @@ class Goods extends BaseController
         return $this->requestData($this->goodsService->getList());
     }
 
-    public function info(Response $request){
+    /**
+     * @throws \app\common\exception\ApiException
+     */
+    public function info(): Response
+    {
         $params['id'] = (int)input('goods_id','');
         $rule = [
             'id' => ['must', '', '商品不能为空'],

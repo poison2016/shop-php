@@ -26,7 +26,16 @@ Route::group('apis/goods', function () {
 
 })->prefix('apis/goods/');
 
+Route::group('apis/order', function () {
+    Route::post('create', 'create')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
 
+})->prefix('apis/order/');
+
+Route::group(function () {
+    // 订单相关
+
+
+})->middleware('\app\middleware\CheckToken');
 
 //登陆相关
 Route::group('signin', function () {
@@ -34,14 +43,6 @@ Route::group('signin', function () {
 })->prefix('signin/');
 
 
-Route::group(function () {
-    // 订单相关
-    Route::group('order', function () {
-        Route::post('create', 'createOrder')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
-
-    })->prefix('order/');
-
-})->middleware('\app\middleware\CheckToken');
 
 // 测试类，扔一些测试内筒
 Route::group('Test', function () {

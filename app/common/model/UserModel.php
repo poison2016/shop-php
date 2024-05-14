@@ -6,6 +6,10 @@ use think\Model;
 
 class UserModel extends Model
 {
-    protected $name = '';
+    protected $name = 'tz_user';
+
+    public function getUserInfo(int $userId){
+        return $this->where('id',$userId)->find();
+    }
 
 }

@@ -51,13 +51,11 @@ class OrderService extends ComService
         Db::startTrans();//启动事务
         try {
 
-
             //订单表写入
 
             if ($goodsInfo['surplus'] == $number) {
-                //Db::name('contract')->where('id', $id)->update(['state' => 1]);
+                $this->goodsModel->where('id', $id)->update(['state' => 1]);
             }
-
             if ($goodsInfo['countdown'] == 1) {
                 $dDate = strtotime($goodsInfo['countdown_time']);
                 $sss = 3600;
