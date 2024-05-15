@@ -209,6 +209,10 @@ function xml_parser($str)
     }
 }
 
+function getDataTime(){
+        return date('Y-m-d H:i:s',time());
+}
+
 /**
  * 获取商品图片完整路径
  * @param $goods_img

@@ -28,6 +28,8 @@ class GoodsService extends ComService
 
     public function getGoodsInfo(int $id){
         $data = $this->goodsModel->where($this->getWhere())->where('id',$id)->find();
+        if(!$data) return errorArray('商品不存在');
+        $data['terms'] = $data['term'];
         if($data['revenue_type'] == 1){
             $data['term'].='小时';
             $data['revenue_type_name'] = '小时';
