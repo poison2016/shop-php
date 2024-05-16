@@ -36,7 +36,7 @@ class CheckToken
         $tokens = \Jwt::jwtDecode($token);
         if ($tokens['status'] == 0) {
             $data = [
-                'code' => 101,
+                'code' => 403,
                 'msg' => $tokens['msg']
             ];
             return Response::create($data, 'json');
@@ -47,25 +47,16 @@ class CheckToken
         $session_key = $tokens['data'] && $tokens['data']['data'] && $tokens['data']['data']->session_key ? $tokens['data']['data']->session_key : '';
         if ($userId == 0) {
             $data = [
-                'code' => 101,
+                'code' => 403,
                 'msg' => 'userId解析异常'
             ];
             return Response::create($data, 'json');
         }
 
 
-        // 验证是否切换手机号码
-        $smartOpenid = $tokens['data'] && $tokens['data']['data'] && isset($tokens['data']['data']->smart_openid) ? $tokens['data']['data']->smart_openid : '';
-        if (isset($smartOpenid) && $smartOpenid) {
-            $newSmartOpenId = (new UserModel())->getOneUser($userId);
-            if (!empty($newSmartOpenId) && isset($newSmartOpenId['smart_openid']) && $newSmartOpenId['smart_openid'] != $smartOpenid) {
-                return Response::create(['code' => 101, 'msg' => '此微信已切换手机号码'], 'json');
-            }
-        }
-
         // 注入参数
         $request->comUserId = $userId;
-        $request->session_key = $session_key;
+
         return $next($request);
     }
 
