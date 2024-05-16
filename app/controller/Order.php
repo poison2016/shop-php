@@ -38,7 +38,9 @@ class Order extends BaseController
     }
 
     public function list(Request $request){
-        $params['user_id'] = (int)$request->comUserId;
+        $params['user_id'] = env('server_env')?
+            '80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+        $params['type'] = input('type',0);
         $rule = [
             'user_id' => ['must', '', '请登录'],
         ];
@@ -47,7 +49,8 @@ class Order extends BaseController
     }
 
     public function info(Request $request){
-        $params['user_id'] = (int)$request->comUserId;
+        $params['user_id'] = env('server_env')?
+            '80b4dfe19a6586731a4906b548559d29':$request->comUserId;
         $params['order_id'] = (int)input('order_id',0);
         $rule = [
             'user_id' => ['must', '', '请登录'],

@@ -171,16 +171,31 @@ class OrderService extends ComService
     }
 
     public function getList(array $params){
-        $where['type'] = $params['type'];
-        $where['user_id'] = $params['user_id'];
-        $data = $this->orderModel->where($where)->paginate(tp_page())->each(function ($item){
-
-        });
+        $where['o.status'] = $params['type'];
+        $where['o.user_id'] = $params['user_id'];
+        $data = $this->orderModel->alias('o')->field('o.*,g.img,g.contract_name,g.cycle')
+            ->join('t_goods g','g.id = o.contract_id','LEFT')
+            ->where($where)->select()->toArray();
         return successArray($data);
     }
 
-    public function getInfo(int $userId,int $orderId){
-        $data = $this->orderModel->where(['user_id'=>$userId,'id'=>$orderId])->find();
+    public function getInfo(string $userId,int $orderId){
+        $data = $this->orderModel->alias('o')
+            ->field('o.*,g.img,g.contract_name,g.banner')
+            ->join('t_goods g','g.id = o.contract_id','LEFT')
+            ->where(['o.user_id'=>$userId,'o.id'=>$orderId])->find()->toArray();
+
+        $data['banner'] = explode(',',$data['banner']);
+        $list = $this->orderBonusModel->where(['order_id'=>$orderId,'user_id'=>$userId])
+            ->select()->toArray();
+        $data['sum_money'] = $this->orderBonusModel->where(['order_id'=>$orderId,'user_id'=>$userId])
+            ->sum('money');
+        $data['ok_money'] = $this->orderBonusModel->where(['order_id'=>$orderId,'user_id'=>$userId,'is_send'=>1])
+            ->sum('money');
+        foreach ($list as &$v){
+            $v['is_send_text'] = $v['is_send']? '已发放':'未发放';
+        }
+        $data['list'] = $list;
         return successArray($data);
     }
 
