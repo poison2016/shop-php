@@ -28,7 +28,7 @@ Route::group('apis/goods', function () {
 
 Route::group('apis/order', function () {
     Route::post('create', 'create')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
-    Route::post('list', 'list')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+    Route::post('list', 'list');
     Route::post('info', 'info')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
 
 })->prefix('apis/order/');
