@@ -2,6 +2,7 @@
 
 namespace app\common\service;
 use Elliptic\EC;
+use Elliptic\Utils;
 use EthTool\Credential;
 use kornrunner\Keccak;
 use xtype\Ethereum\Client as EthereumClient;
@@ -11,11 +12,8 @@ use Web3\Eth;
 use Web3\Providers\HttpProvider;
 use Web3\RequestManagers\HttpRequestManager;
 use Web3\Web3;
-use Web3\Utils;
-use Elliptic\EC;
-use EthTool\Credential;
-use kornrunner\Keccak;
-use xtype\Ethereum\Client as EthereumClient;
+use xtype\Ethereum\Utils as UtilsData;
+
 class UserService extends ComService
 {
 
@@ -75,7 +73,7 @@ class UserService extends ComService
 
         // 链接以太坊节点
         $client = new EthereumClient([
-            'base_uri' => $this->infura_endpoint,
+            'base_uri' => 'https://kovan.infura.io/v3/a0d810fdff64493baba47278f3ebad27',
             'timeout' => 30,
         ]);
 
@@ -110,6 +108,43 @@ class UserService extends ComService
         $receipt = $client->eth_getTransactionReceipt($txid);
         return $txid;
     }
+
+    /**v3 最新版本的支付
+     * @param $send 发币方
+     * @param $to 接受方
+     * @param $price 价格
+     * @throws \Exception
+     */
+    public function sendPriceOne($send, $to, $price)
+    {
+        $client = new EthereumClient([
+            'base_uri' => 'https://mainnet.infura.io/v3/a0d810fdff64493baba47278f3ebad27',
+            'timeout' => 30,
+        ]);
+        $client->addPrivateKeys(["秘钥xxxx"]);
+        // 2. 组装交易
+        $trans = [
+            "from" => $send,
+            "to" => $to,
+            "value" => UtilsData::ethToWei($price, true),
+            "data" => '0x',
+        ];
+        // 设定Gas，nonce，gasprice
+        $trans['gas'] = dechex(hexdec($client->eth_estimateGas($trans)) * 1.5);
+        $trans['gasPrice'] = $client->eth_gasPrice();
+        $trans['nonce'] = $client->eth_getTransactionCount($send, 'pending');
+        // 3. 发送您的交易
+        // 如果需要服务器，也可以使用eth_sendTransaction
+        $txid = $client->sendTransaction($trans);
+
+        //4.得到交易hash
+        var_dump($txid);
+
+        //查询到账情况
+        var_dump($client->eth_getTransactionReceipt($txid));
+    }
+
+
 
     public function getOrder($address){
         $apikey = "7G6TT4NRQCGKIESRT89EV5FGXD4IPR7WT6"; //99999999

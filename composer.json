@@ -36,7 +36,8 @@
         "topthink/think-queue": "^3.0",
         "ext-bcmath": "*",
         "topthink/think-throttle": "^2.0",
-        "ext-redis": "*"
+        "ext-redis": "*",
+        "myxtype/ethereum-client": "dev-master"
     },
     "require-dev": {
         "symfony/var-dumper": ">=4.2",

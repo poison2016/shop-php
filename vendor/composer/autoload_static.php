@@ -7,21 +7,21 @@ namespace Composer\Autoload;
 class ComposerStaticIniteb6966366ff961eeb4c0327b220ead61
 {
     public static $files = array (
-        '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         'd767e4fc2dc52fe66584ab8c6684783e' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/helpers.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
-        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         'a9ed0d27b5a698798a89181429f162c5' => __DIR__ . '/..' . '/khanamiryan/qrcode-detector-decoder/lib/Common/customFunctions.php',
         'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
         '66453932bc1be9fb2f910a27947d11b6' => __DIR__ . '/..' . '/alibabacloud/client/src/Functions.php',
@@ -30,12 +30,20 @@ class ComposerStaticIniteb6966366ff961eeb4c0327b220ead61
     );
 
     public static $prefixLengthsPsr4 = array (
+        'x' => 
+        array (
+            'xtype\\' => 6,
+        ),
         't' => 
         array (
             'think\\trace\\' => 12,
             'think\\migration\\' => 16,
             'think\\middleware\\' => 17,
             'think\\' => 6,
+        ),
+        'k' => 
+        array (
+            'kornrunner\\' => 11,
         ),
         'c' => 
         array (
@@ -109,6 +117,7 @@ class ComposerStaticIniteb6966366ff961eeb4c0327b220ead61
         'E' => 
         array (
             'Endroid\\QrCode\\' => 15,
+            'Elliptic\\' => 9,
         ),
         'D' => 
         array (
@@ -123,6 +132,8 @@ class ComposerStaticIniteb6966366ff961eeb4c0327b220ead61
         'B' => 
         array (
             'BaconQrCode\\' => 12,
+            'BN\\' => 3,
+            'BI\\' => 3,
         ),
         'A' => 
         array (
@@ -132,6 +143,10 @@ class ComposerStaticIniteb6966366ff961eeb4c0327b220ead61
     );
 
     public static $prefixDirsPsr4 = array (
+        'xtype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myxtype/ethereum-client/src',
+        ),
         'think\\trace\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-trace/src',
@@ -151,6 +166,10 @@ class ComposerStaticIniteb6966366ff961eeb4c0327b220ead61
             2 => __DIR__ . '/..' . '/topthink/think-helper/src',
             3 => __DIR__ . '/..' . '/topthink/think-orm/src',
             4 => __DIR__ . '/..' . '/topthink/think-queue/src',
+        ),
+        'kornrunner\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kornrunner/keccak/src',
         ),
         'clagiordano\\weblibs\\configmanager\\' => 
         array (
@@ -301,6 +320,10 @@ class ComposerStaticIniteb6966366ff961eeb4c0327b220ead61
         array (
             0 => __DIR__ . '/..' . '/endroid/qr-code/src',
         ),
+        'Elliptic\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/simplito/elliptic-php/lib',
+        ),
         'DASPRiD\\Enum\\' => 
         array (
             0 => __DIR__ . '/..' . '/dasprid/enum/src',
@@ -320,6 +343,14 @@ class ComposerStaticIniteb6966366ff961eeb4c0327b220ead61
         'BaconQrCode\\' => 
         array (
             0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
+        ),
+        'BN\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/simplito/bn-php/lib',
+        ),
+        'BI\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/simplito/bigint-wrapper-php/lib',
         ),
         'AlibabaCloud\\Client\\' => 
         array (
