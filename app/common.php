@@ -336,6 +336,11 @@ function successArray($data = [], $message = '提交成功', $code = 200)
     return ['code' => $code, 'message' => $message, 'data' => $data];
 }
 
+function md5Password($str): string
+{
+    return md5($str.'gwefasdfa2A');
+}
+
 /**返回失败的消息
  * @param string $message
  * @param int $code

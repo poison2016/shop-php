@@ -33,6 +33,12 @@ Route::group('apis/order', function () {
 
 })->prefix('apis/order/');
 
+Route::group('apis/user', function () {
+    Route::post('createAddress', 'createAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+    Route::post('importAddress', 'importAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
+    Route::post('login', 'login')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
+})->prefix('apis/user/');
+
 Route::group(function () {
     // 订单相关
 

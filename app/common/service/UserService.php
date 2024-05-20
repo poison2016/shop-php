@@ -1,10 +1,14 @@
 <?php
 
 namespace app\common\service;
+use app\common\model\UserAddressModel;
+use app\common\model\UserModel;
 use Elliptic\EC;
 use Elliptic\Utils;
 use EthTool\Credential;
+use Firebase\JWT\JWT;
 use kornrunner\Keccak;
+use think\facade\Db;
 use xtype\Ethereum\Client as EthereumClient;
 
 require_once  __DIR__ .'/../../../extend/eth_spt/vendor/autoload.php';
@@ -16,6 +20,14 @@ use xtype\Ethereum\Utils as UtilsData;
 
 class UserService extends ComService
 {
+    protected UserAddressModel $userAddressModel;
+    protected UserModel $userModel;
+
+    public function __construct(UserAddressModel $userAddressModel,UserModel $userModel)
+    {
+        $this->userAddressModel = $userAddressModel;
+        $this->userModel = $userModel;
+    }
 
     /**创建钱包地址
      * @param int $userId
@@ -30,6 +42,49 @@ class UserService extends ComService
         $publicKey = $keyPair->getPublic()->encode('hex');
         $address = '0x' . substr(Keccak::hash(substr(hex2bin($publicKey),1),256),24);
         return [$privateKey,$publicKey,$address];
+    }
+
+    public function loginUser($params){
+        $userInfo = $this->userModel->where('user_name',$params['username'])->find()->toArray();
+        if(!$userInfo) return errorArray('账号不正确');
+        if(md5Password($params['password']) !== $userInfo['l_password']) return errorArray('密码错误');
+        //生成token
+        $token = $this->getToken($userInfo['user_id'],'');
+        return successArray(['token'=>$token]);
+    }
+
+    public function getToken(int $user_id, string $sessionKey = '')
+    {
+        $token = (new \Jwt())->jwtEncode(['user_id' => $user_id]);
+        return ['token' => $token];
+    }
+
+    public function createUserAddress($params): array
+    {
+        $ret = $this->userAddressModel->where('user_id',$params['user_id'])->find();
+        if($ret) return errorArray('已添加过钱包地址');
+        $addAddress = $params['address']??'';
+        if($params['type'] == 1){//导入秘钥
+            if(!$params['prv_key']) return errorArray('秘钥不能为空');
+            if(!$params['address']) return errorArray('地址不能为空');
+            $res = $this->userAddressModel->insert([
+                'user_id'=>$params['user_id'],
+                'prv_key'=>$params['prv_key'],
+                'address'=>$params['address'],
+                'create_time'=>time()
+            ]);
+        }else{//生成秘钥
+           [$prv_key,$pub_key,$address] =  $this->createAddress($params['user_id']);
+            $addAddress = $address;
+           $res = $this->userAddressModel->insert([
+               'user_id'=>$params['user_id'],
+               'prv_key'=>$prv_key,
+               'address'=>$address,
+               'create_time'=>time()
+           ]);
+        }
+        if(!$res) return errorArray('程序异常');
+        return successArray(['address'=>$addAddress]);
     }
 
     public function addAddress(array $params){
