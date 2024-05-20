@@ -16,11 +16,6 @@ public function __construct(App $app,UserService $userService)
     parent::__construct($app);
     $this->userService = $userService;
 }
-
-    public function getUserInfo(){
-
-    }
-
     public function createAddress(Request $request)
     {
         $params = input('post.');
