@@ -47,13 +47,13 @@ class UserService extends ComService
     public function loginUser($params){
         $userInfo = $this->userModel->where('user_name',$params['username'])->find()->toArray();
         if(!$userInfo) return errorArray('账号不正确');
-        if(md5Password($params['password']) !== $userInfo['l_password']) return errorArray('密码错误');
+        if(!passwordV($params['password'],$userInfo['login_password'])) return errorArray('密码错误');
         //生成token
-        $token = $this->getToken($userInfo['user_id'],'');
+        $token = $this->getToken($userInfo['user_id']);
         return successArray(['token'=>$token]);
     }
 
-    public function getToken(int $user_id, string $sessionKey = '')
+    public function getToken(string $user_id, string $sessionKey = '')
     {
         $token = (new \Jwt())->jwtEncode(['user_id' => $user_id]);
         return ['token' => $token];

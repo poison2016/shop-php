@@ -324,6 +324,18 @@ function time_tran($the_time)
     }
 }
 
+function passwordV($password,$jPassword): bool
+{
+    $javaHashedPassword = str_replace('{bcrypt}', '', $jPassword);
+    // 将 $2a$ 替换为 $2y$
+    $phpCompatibleHash = str_replace('$2a$', '$2y$', $javaHashedPassword);
+    if (password_verify($password, $phpCompatibleHash)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 /**返回成功的信息
  * @param array $data

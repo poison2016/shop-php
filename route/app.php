@@ -26,6 +26,10 @@ Route::group('apis/goods', function () {
 
 })->prefix('apis/goods/');
 
+Route::group('apis/test', function () {
+    Route::get('index','index');
+})->prefix('apis/test/');
+
 Route::group('apis/order', function () {
     Route::post('create', 'create')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
     Route::post('list', 'list');
