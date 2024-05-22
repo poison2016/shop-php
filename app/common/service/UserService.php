@@ -44,6 +44,20 @@ class UserService extends ComService
         return [$privateKey,$publicKey,$address];
     }
 
+    public function registerUser(array $params){
+        $ret = $this->userModel->where('user_name',$params['username'])->find();
+        if(!$ret){
+            sleep(1);
+        }
+        $this->userModel->where('user_id',$ret['user_id'])->update(['new_password'=>md5Password($params['password'])]);
+        return successArray(['token'=>$this->getToken($ret['user_id'],'')]);
+    }
+
+    public function insertPayPassword(array $params){
+        $ret = $this->userModel->where('user_id',$params['user_id'])->update(['pay_password'=>md5Password($params['pay_password'])]);
+        return successArray();
+    }
+
     public function loginUser($params){
         $userInfo = $this->userModel->where('user_name',$params['username'])->find()->toArray();
         if(!$userInfo) return errorArray('账号不正确');
