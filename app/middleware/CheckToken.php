@@ -19,8 +19,8 @@ class CheckToken
     public function handle($request, \Closure $next)
     {
         //echo "中间件开始执行==><br/>";
-        $userToken = $request->header('user-token', '');
-        $token = $request->header('token', '');
+        $userToken = $request->header('Api-Token', '');
+        $token = $request->header('api-token', '');
         if ($token == '' && $userToken == '') {
             $data = [
                 'code' => 101,
@@ -44,7 +44,7 @@ class CheckToken
 
         // 获取用户userId
         $userId = $tokens['data'] && $tokens['data']['data'] && $tokens['data']['data']->user_id ? $tokens['data']['data']->user_id : 0;
-        $session_key = $tokens['data'] && $tokens['data']['data'] && $tokens['data']['data']->session_key ? $tokens['data']['data']->session_key : '';
+        //$session_key = $tokens['data'] && $tokens['data']['data'] && $tokens['data']['data']->session_key ? $tokens['data']['data']->session_key : '';
         if ($userId == 0) {
             $data = [
                 'code' => 403,

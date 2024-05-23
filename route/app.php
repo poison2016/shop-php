@@ -21,10 +21,10 @@ Route::group('image', function () {
 })->prefix('image/');
 
 Route::group('apis/goods', function () {
-    Route::post('list','list');
-    Route::post('info','info');
+    Route::post('list','list')->middleware('\app\middleware\CheckToken');
+    Route::post('info','info')->middleware('\app\middleware\CheckToken');
 
-})->prefix('apis/goods/');
+})->prefix('apis/goods/');;
 
 Route::group('apis/test', function () {
     Route::get('index','index');
@@ -35,13 +35,16 @@ Route::group('apis/order', function () {
     Route::post('list', 'list');
     Route::post('info', 'info')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
 
-})->prefix('apis/order/');
+})->prefix('apis/order/')->middleware('\app\middleware\CheckToken');
 
 Route::group('apis/user', function () {
     Route::post('createAddress', 'createAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
     Route::post('importAddress', 'importAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
     Route::post('login', 'login')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
-})->prefix('apis/user/');
+    Route::post('addressList', 'addressList');
+    Route::post('getAddressInfo', 'getAddressInfo');//限制1秒只能请求一次
+    Route::post('setMoney', 'setMoney');//限制1秒只能请求一次
+})->prefix('apis/user/')->middleware('\app\middleware\CheckToken');
 
 Route::group(function () {
     // 订单相关
