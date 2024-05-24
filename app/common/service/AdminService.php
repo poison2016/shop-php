@@ -23,8 +23,7 @@ class AdminService extends ComService
     }
 
     public function getGoodsList(){
-        var_dump(222);
-        return successArray($this->goodsModel->paginate(tp_page(15))->select()->toArray());
+        return successArray($this->goodsModel->paginate(tp_page()));
     }
     public function getGoodsInfo($id){
         $data = $this->goodsModel->where('id',$id)->find();
@@ -54,7 +53,7 @@ class AdminService extends ComService
     public function orderList(){
         $data =  $this->orderModel->alias('o')->field('o.*,g.contract_name,g.img,g.yield,g.revenue_type')
             ->join('t_goods g','g.id = o.contract_id','LEFT')
-            ->paginate(tp_page(15))->select()->toArray();
+            ->paginate(tp_page(15));
         return successArray($data);
     }
     public function orderInfo($id){
