@@ -16,6 +16,7 @@ class Admin extends BaseController
         $this->adminService = $adminService;
     }
     public function getGoodsList(){
+        var_dump(111);
         return $this->requestData($this->adminService->getGoodsList());
     }
     public function getGoodsInfo(){
