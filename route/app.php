@@ -24,7 +24,7 @@ Route::group('apis/goods', function () {
     Route::post('list','list');
     Route::post('info','info');
 
-})->prefix('apis/goods/');;
+})->prefix('apis/goods/');
 
 Route::group('apis/test', function () {
     Route::get('index','index');
