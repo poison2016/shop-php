@@ -101,6 +101,13 @@ class UserService extends ComService
         return successArray($ret);
     }
 
+    public function getUserInfo($params){
+        $ret = $this->userModel->alias('u')->field('u.*,uw.money')
+            ->join('tz_wallet uw','uw.user_id = u.user_id','LEFT')
+            ->where('u.user_id',$params['user_id'])->find();
+        return successArray($ret);
+    }
+
     public function getAddressInfo($params){
         $ret = $this->userAddressModel->field('address,id')->where('user_id',$params['user_id'])
             ->where('id',$params['address_id'])->find()->toArray();

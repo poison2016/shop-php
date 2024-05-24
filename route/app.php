@@ -56,6 +56,7 @@ Route::group('apis/user', function () {
     Route::post('addressList', 'addressList')->middleware('\app\middleware\CheckToken');
     Route::post('getAddressInfo', 'getAddressInfo')->middleware('\app\middleware\CheckToken');//限制1秒只能请求一次
     Route::post('setMoney', 'setMoney')->middleware('\app\middleware\CheckToken');//限制1秒只能请求一次
+    Route::post('getUserInfo', 'getUserInfo')->middleware('\app\middleware\CheckToken');//限制1秒只能请求一次
 })->prefix('apis/user/');
 
 Route::group(function () {

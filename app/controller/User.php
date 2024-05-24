@@ -35,6 +35,11 @@ public function __construct(App $app,UserService $userService)
         return $this->requestData($this->userService->getAddressInfo($params));
     }
 
+    public function getUserInfo(Request $request){
+        $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+        return $this->requestData($this->userService->getUserInfo($params));
+    }
+
     public function setMoney(Request $request){
         $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
         $params['address_id'] = input('address_id',0);
