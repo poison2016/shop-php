@@ -6,6 +6,7 @@ use app\common\model\GoodsModel;
 use app\common\model\OrderBonusModel;
 use app\common\model\OrderModel;
 use app\common\model\UserAddressModel;
+use think\facade\Db;
 
 class AdminService extends ComService
 {
@@ -74,8 +75,9 @@ class AdminService extends ComService
 
     public function coinList(){
         $data = $this->userAddressModel
-            ->alias('ua')->field('ua.*,u.user_name')->join('tz_user u','u.user_id = ua.user_id','LEFT')
-            ->paginate(tp_page(15));
+            ->paginate(tp_page(15))->each(function (&$item){
+                $item['username'] = Db::name('tz_user')->where('user_id',$item['user_id'])->value('user_name');
+            });
         return successArray($data);
     }
 
