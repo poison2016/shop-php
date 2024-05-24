@@ -43,8 +43,7 @@ class AdminService extends ComService
         return successArray(['id'=>$ret]);
     }
 
-    public function delGoods($params){
-        $id = $params['id'];
+    public function delGoods($id){
         $ret = $this->goodsModel->where('id',$id)->delete();
         if(!$ret) return errorArray('删除失败');
         return successArray(['id'=>$id]);
