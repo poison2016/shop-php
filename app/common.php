@@ -343,7 +343,7 @@ function passwordV($password,$jPassword): bool
  * @param int $code
  * @return array
  */
-function successArray($data = [], $message = '提交成功', $code = 200)
+function successArray($data = [], $message = '提交成功', $code = 0)
 {
     return ['code' => $code, 'message' => $message, 'data' => $data];
 }
