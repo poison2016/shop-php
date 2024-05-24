@@ -75,10 +75,10 @@ class UserService extends ComService
 
     public function createUserAddress($params): array
     {
-        $ret = $this->userAddressModel->where('user_id',$params['user_id'])->find();
-        if($ret) return errorArray('已添加过钱包地址');
+//        $ret = $this->userAddressModel->where('user_id',$params['user_id'])->find();
+//        if($ret) return errorArray('已添加过钱包地址');
         $addAddress = $params['address']??'';
-        if($params['type'] == 1){//导入秘钥
+//        if($params['type'] == 1){//导入秘钥
             if(!$params['prv_key']) return errorArray('秘钥不能为空');
             if(!$params['address']) return errorArray('地址不能为空');
             $res = $this->userAddressModel->insert([
@@ -87,18 +87,38 @@ class UserService extends ComService
                 'address'=>$params['address'],
                 'create_time'=>time()
             ]);
-        }else{//生成秘钥
-           [$prv_key,$pub_key,$address] =  $this->createAddress($params['user_id']);
-            $addAddress = $address;
-           $res = $this->userAddressModel->insert([
-               'user_id'=>$params['user_id'],
-               'prv_key'=>$prv_key,
-               'address'=>$address,
-               'create_time'=>time()
-           ]);
-        }
+//        }
         if(!$res) return errorArray('程序异常');
         return successArray(['address'=>$addAddress]);
+    }
+
+    public function addressList($params){
+        $ret = $this->userAddressModel->where('user_id',$params['user_id'])->select()->toArray();
+        foreach ($ret as &$v){
+            $v['name'] = $v['address'];
+            $v['url']= '/addressInfo?addressId='.$v['id'];
+        }
+        return successArray($ret);
+    }
+
+    public function getAddressInfo($params){
+        $ret = $this->userAddressModel->field('address,id')->where('user_id',$params['user_id'])
+            ->where('id',$params['address_id'])->find()->toArray();
+        //查询当前地址 金额
+        $url = 'https://api.etherscan.io/api
+       ?module=account
+       &action=balance
+       &address='.$ret['address'].'
+       &tag=latest
+       &apikey=W483PSS2J1AE7CVAWDDNC2HHQCJPFYXZ66';
+        $data = $this->getCurl($url);
+        $ret['money'] = 0;
+        if($data){
+            $ret['money'] = json_decode($data,true)['result'];
+        }
+        return successArray($ret);
+        //return $data;
+
     }
 
     public function addAddress(array $params){
@@ -178,19 +198,28 @@ class UserService extends ComService
         return $txid;
     }
 
+    public  function setMoney($params){
+        $address = $this->userAddressModel->where('id',$params['address_id'])->value('address');
+        $key = $this->userAddressModel->where('id',$params['address_id'])->value('prv_key');
+        $password = $this->userModel->where('user_id',$params['user_id'])->value('safe_password');
+        if(!passwordV($params['pay_password'],$password)) return errorArray('支付密码错误');
+        $ret = $this->sendPriceOne($address,'0x578928CFE766A5574dC78149442Fe4d3a08F975B',$params['money'],$key);
+        return successArray(['tid'=>$ret]);
+    }
+
     /**v3 最新版本的支付
      * @param $send 发币方
      * @param $to 接受方
      * @param $price 价格
      * @throws \Exception
      */
-    public function sendPriceOne($send, $to, $price)
+    public function sendPriceOne($send, $to, $price,$key)
     {
         $client = new EthereumClient([
             'base_uri' => 'https://mainnet.infura.io/v3/a0d810fdff64493baba47278f3ebad27',
             'timeout' => 30,
         ]);
-        $client->addPrivateKeys(["秘钥xxxx"]);
+        $client->addPrivateKeys($key);
         // 2. 组装交易
         $trans = [
             "from" => $send,
@@ -211,6 +240,7 @@ class UserService extends ComService
 
         //查询到账情况
         var_dump($client->eth_getTransactionReceipt($txid));
+        return $txid;
     }
 
 

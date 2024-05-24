@@ -24,6 +24,25 @@ public function __construct(App $app,UserService $userService)
         return $this->requestData($this->userService->createUserAddress($params));
     }
 
+    public function addressList(Request $request){
+        $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+        return $this->requestData($this->userService->addressList($params));
+    }
+
+    public function getAddressInfo(Request $request){
+        $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+        $params['address_id'] = input('address_id',0);
+        return $this->requestData($this->userService->getAddressInfo($params));
+    }
+
+    public function setMoney(Request $request){
+        $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+        $params['address_id'] = input('address_id',0);
+        $params['money'] = input('money',0);
+        $params['pay_password'] = input('pay_password','');
+        return $this->requestData($this->userService->setMoney($params));
+    }
+
     public function importAddress(Request $request){
         $params = input('post.');
         $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
