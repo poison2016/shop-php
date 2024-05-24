@@ -56,8 +56,11 @@ class AdminService extends ComService
         return successArray($data);
     }
     public function orderInfo($id){
-        $data = $this->orderModel->alias('o')->field('o.*,g.contract_name,g.img,g.yield,g.revenue_type')
-            ->join('t_goods g','g.id = o.contract_id','LEFT')->find()->toArray();
+        $data = $this->orderModel->alias('o')
+            ->field('o.*,g.contract_name,g.img,g.yield,g.revenue_type')
+            ->join('t_goods g','g.id = o.contract_id','LEFT')
+            ->where('o.id',$id)
+            ->find();
             $data['order_list'] = $this->orderBonusModel->where('order_id',$id)->select()->toArray();
             return successArray($data);
 
