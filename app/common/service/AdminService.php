@@ -23,6 +23,7 @@ class AdminService extends ComService
     }
 
     public function getGoodsList(){
+        var_dump(222);
         return successArray($this->goodsModel->paginate(tp_page(15))->select()->toArray());
     }
     public function getGoodsInfo($id){
