@@ -29,6 +29,18 @@ Route::group('apis/goods', function () {
 Route::group('apis/test', function () {
     Route::get('index','index');
 })->prefix('apis/test/');
+Route::group('admins/admin', function () {
+    Route::post('getGoodsList','getGoodsList');
+    Route::post('getGoodsInfo','getGoodsInfo');
+    Route::post('insertGoods','insertGoods');
+    Route::post('updateGoods','updateGoods');
+    Route::post('delGoods','delGoods');
+    Route::post('orderList','orderList');
+    Route::post('orderInfo','orderInfo');
+    Route::post('delOrder','delOrder');
+    Route::post('coinList','coinList');
+    Route::post('delCoin','delCoin');
+})->prefix('admins/admin/');
 
 Route::group('apis/order', function () {
     Route::post('create', 'create')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
