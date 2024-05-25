@@ -7,6 +7,8 @@ use app\common\model\OrderBonusModel;
 use app\common\model\OrderModel;
 use app\common\model\UserAddressModel;
 use think\facade\Db;
+use think\facade\Filesystem;
+use think\facade\Request;
 
 class AdminService extends ComService
 {
@@ -85,6 +87,22 @@ class AdminService extends ComService
         $ret = $this->userAddressModel->where('id',$id)->delete();
         if(!$ret) return errorArray('删除失败');
         return successArray(['id'=>$id]);
+    }
+
+    public function uploadImg(){
+        $file = Request::file('image');
+        if (!$file) {
+            return errorArray('没有上传文件');
+        }
+        // 上传文件到指定目录
+        $savename = Filesystem::disk('public')->putFile('uploads', $file);
+        if (!$savename) {
+            return errorArray('文件上传失败');
+        }
+        // 获取完整URL
+        $domain = Request::domain();
+        $url = $domain . '/storage/' . $savename;
+        return successArray(['url'=>$url]);
     }
 
 }

@@ -49,37 +49,7 @@ class Admin extends BaseController
     }
 
     public function uploadImg(){
-// 获取表单上传文件
-        $file = Request::file('image');
-
-        if (!$file) {
-            return json(['error' => '没有上传文件'], 400);
-        }
-
-//        // 验证文件类型和大小
-//        $validate = [
-//            'size' => 20097152, // 2MB
-//            'ext' => 'jpg,png,gif'
-//        ];
-//
-//        // 检查文件是否符合验证规则
-//        $result = $this->validate(['file' => $file], ['file' => $validate]);
-//        if (true !== $result) {
-//            return json(['error' => $result], 100);
-//        }
-
-        // 上传文件到指定目录
-        $savename = Filesystem::disk('public')->putFile('uploads', $file);
-
-        if (!$savename) {
-            return json(['error' => '文件上传失败'], 100);
-        }
-
-        // 获取完整URL
-        $domain = Request::domain();
-        $url = $domain . '/storage/' . $savename;
-
-        return json(['url' => $url], 200);
+        return $this->requestData($this->adminService->uploadImg());
     }
 
 }
