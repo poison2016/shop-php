@@ -28,9 +28,8 @@ class SendPrice extends Command
             ->field('co.*,c.*,co.id order_ids,c.id co_ids,co.pay_amount pay_amounts,co.total_amount total_amounts')
             ->join('t_goods c', 'c.id = co.contract_id', 'LEFT')
             ->where(['co.status' => 0, 'co.deleted' => 0])->select();
+
         foreach ($data as $v){
-
-
 
             $res = Db::name('t_order_bonus')->where('order_id',$v['order_ids'])->where('is_send',0)->order('id','asc')->select();
             if(!$res){//关闭订单
@@ -44,7 +43,7 @@ class SendPrice extends Command
             //将订单修改为已奖励
             Db::name('t_order_bonus')->where('id',$res['id'])->update(['is_send'=>1]);
             //将订单的钱 写入用户记录
-            $userData = Db::name('tz_user')->where('id', $v['user_id'])->find();
+            $userData = Db::name('tz_user')->where('user_id', $v['user_id'])->find();
             if(!$userData){
                 var_dump('警告！！！该用户信息不存在 用户id:'.$v['user_id']);
                 continue;
@@ -64,7 +63,7 @@ class SendPrice extends Command
 
                 //LogService::userMoneyLog($userData, $v['total_amounts'], 1, '资产包本金返回', '资产包本金返回', 4,$res['create_time']);
             }
-            Db::name('tz_user')->where('id', $v['user_id'])->update($insertUser);
+            Db::name('tz_user')->where('user_id', $v['user_id'])->update($insertUser);
             //LogService::userMoneyLog($userData, $hhhh, 1, '资产包收益', '资产包收益', 4,$res['create_time']);
             //查询总数量 剩余一条 关闭订单
             $resCount = Db::name('t_order_bonus')->where('order_id',$v['order_ids'])->where('is_send',0)->count();

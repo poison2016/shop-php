@@ -6,6 +6,7 @@ use app\common\model\GoodsModel;
 use app\common\model\OrderBonusModel;
 use app\common\model\OrderModel;
 use app\common\model\UserAddressModel;
+use think\facade\Db;
 
 class AdminService extends ComService
 {
@@ -23,7 +24,7 @@ class AdminService extends ComService
     }
 
     public function getGoodsList(){
-        return successArray($this->goodsModel->paginate(tp_page(15))->select()->toArray());
+        return successArray($this->goodsModel->paginate(tp_page()));
     }
     public function getGoodsInfo($id){
         $data = $this->goodsModel->where('id',$id)->find();
@@ -43,8 +44,7 @@ class AdminService extends ComService
         return successArray(['id'=>$ret]);
     }
 
-    public function delGoods($params){
-        $id = $params['id'];
+    public function delGoods($id){
         $ret = $this->goodsModel->where('id',$id)->delete();
         if(!$ret) return errorArray('删除失败');
         return successArray(['id'=>$id]);
@@ -53,12 +53,15 @@ class AdminService extends ComService
     public function orderList(){
         $data =  $this->orderModel->alias('o')->field('o.*,g.contract_name,g.img,g.yield,g.revenue_type')
             ->join('t_goods g','g.id = o.contract_id','LEFT')
-            ->paginate(tp_page(15))->select()->toArray();
+            ->paginate(tp_page(15));
         return successArray($data);
     }
     public function orderInfo($id){
-        $data = $this->orderModel->alias('o')->field('o.*,g.contract_name,g.img,g.yield,g.revenue_type')
-            ->join('t_goods g','g.id = o.contract_id','LEFT')->find()->toArray();
+        $data = $this->orderModel->alias('o')
+            ->field('o.*,g.contract_name,g.img,g.yield,g.revenue_type')
+            ->join('t_goods g','g.id = o.contract_id','LEFT')
+            ->where('o.id',$id)
+            ->find();
             $data['order_list'] = $this->orderBonusModel->where('order_id',$id)->select()->toArray();
             return successArray($data);
 
@@ -72,8 +75,9 @@ class AdminService extends ComService
 
     public function coinList(){
         $data = $this->userAddressModel
-            ->alias('ua')->field('ua.*,u.user_name')->join('tz_user u','u.user_id = ua.user_id','LEFT')
-            ->paginate(tp_page(15));
+            ->paginate(tp_page(15))->each(function (&$item){
+                $item['username'] = Db::name('tz_user')->where('user_id',$item['user_id'])->value('user_name');
+            });
         return successArray($data);
     }
 

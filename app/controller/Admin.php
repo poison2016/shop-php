@@ -30,7 +30,7 @@ class Admin extends BaseController
         return $this->requestData($this->adminService->updateGoods(input('post.')));
     }
     public function delGoods(){
-        return $this->requestData($this->adminService->updateGoods(input('id')));
+        return $this->requestData($this->adminService->delGoods(input('id')));
     }
     public function orderList(){
         return $this->requestData($this->adminService->orderList());
