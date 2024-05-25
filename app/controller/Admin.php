@@ -56,17 +56,17 @@ class Admin extends BaseController
             return json(['error' => '没有上传文件'], 400);
         }
 
-        // 验证文件类型和大小
-        $validate = [
-            'size' => 20097152, // 2MB
-            'ext' => 'jpg,png,gif'
-        ];
-
-        // 检查文件是否符合验证规则
-        $result = $this->validate(['file' => $file], ['file' => $validate]);
-        if (true !== $result) {
-            return json(['error' => $result], 100);
-        }
+//        // 验证文件类型和大小
+//        $validate = [
+//            'size' => 20097152, // 2MB
+//            'ext' => 'jpg,png,gif'
+//        ];
+//
+//        // 检查文件是否符合验证规则
+//        $result = $this->validate(['file' => $file], ['file' => $validate]);
+//        if (true !== $result) {
+//            return json(['error' => $result], 100);
+//        }
 
         // 上传文件到指定目录
         $savename = Filesystem::disk('public')->putFile('uploads', $file);

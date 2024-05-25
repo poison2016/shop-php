@@ -40,6 +40,7 @@ Route::group('admins/admin', function () {
     Route::post('delOrder','delOrder');
     Route::post('coinList','coinList');
     Route::post('delCoin','delCoin');
+    Route::post('uploadImg','uploadImg');
 })->prefix('admins/admin/');
 
 Route::group('apis/order', function () {
