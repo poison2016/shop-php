@@ -78,7 +78,6 @@ class TrxService extends ComService
             ]);
 
             // 返回余额信息
-            var_dump($balance);
             $balanceData = isset($balance['balance']) ? $balance['balance'] : 0;
             // 获取 USDT 余额
             $usdtContractAddress = 'TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj'; // USDT TRC20 合约地址
