@@ -81,7 +81,7 @@ class TrxService extends ComService
             $balanceData = isset($balance['balance']) ? $balance['balance'] : 0;
             // 获取 USDT 余额
             $usdtContractAddress = 'TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj'; // USDT TRC20 合约地址
-            $usdtBalanceHex = $this->tron->getTransactionBuilder()->triggerSmartContract(
+            $contractCall = $this->tron->getTransactionBuilder()->triggerSmartContract(
                 $this->tron->address2HexString($usdtContractAddress),
                 'balanceOf(address)',
                 10000000, // feeLimit
@@ -93,8 +93,13 @@ class TrxService extends ComService
                     ]
                 ],
                 $this->tron->address2HexString($address) // payerAddress
-            )['constant_result'][0];
-            $usdtBalance = hexdec($usdtBalanceHex) / 1e6; // 将余额转换为可读格式
+            );
+            if (isset($contractCall['constant_result'][0])) {
+                $usdtBalanceHex = $contractCall['constant_result'][0];
+                $usdtBalance = hexdec($usdtBalanceHex) / 1e6; // 将余额转换为可读格式
+            } else {
+                $usdtBalance = 0;
+            }
             return successArray(['trx_balance'=>$balanceData,'usdt_balance'=>$usdtBalance]);
         } catch (\Exception $e) {
             Log::error('Get Balance Error: ' . $e->getMessage());
