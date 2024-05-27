@@ -72,7 +72,7 @@ class TrxService extends ComService
     public function getBalance($address,$privateKey = ''): array
     {
         $this->tron->setPrivateKey($privateKey);
-        try {
+//        try {
             $balance = $this->tron->getManager()->request('wallet/getaccount', [
                 'address' => $this->tron->address2HexString($address)
             ]);
@@ -94,7 +94,6 @@ class TrxService extends ComService
                 ],
                 $this->tron->address2HexString($address) // payerAddress
             );
-            var_dump($contractCall);exit();
             if (isset($contractCall['constant_result'][0])) {
                 $usdtBalanceHex = $contractCall['constant_result'][0];
                 $usdtBalance = hexdec($usdtBalanceHex) / 1e6; // 将余额转换为可读格式
@@ -102,10 +101,10 @@ class TrxService extends ComService
                 $usdtBalance = 0;
             }
             return successArray(['trx_balance'=>$balanceData,'usdt_balance'=>$usdtBalance]);
-        } catch (\Exception $e) {
-            Log::error('Get Balance Error: ' . $e->getMessage());
-            return errorArray($e->getMessage());
-        }
+//        } catch (\Exception $e) {
+//            Log::error('Get Balance Error: ' . $e->getMessage());
+//            return errorArray($e->getMessage());
+//        }
     }
 
 }
