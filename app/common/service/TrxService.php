@@ -78,6 +78,7 @@ class TrxService extends ComService
             ]);
 
             // 返回余额信息
+            var_dump($balance);
             $balanceData = isset($balance['balance']) ? $balance['balance'] : 0;
             return successArray(['balance'=>$balanceData]);
         } catch (\Exception $e) {
