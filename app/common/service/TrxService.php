@@ -86,12 +86,12 @@ class TrxService extends ComService
                 'balanceOf(address)',
                 10000000, // feeLimit
                 0, // callValue
-                [
+//                [
                     [
                         'type' => 'address',
                         'value' => $this->tron->address2HexString($address)
-                    ]
-                ],
+                    ],
+//                ],
                 $this->tron->address2HexString($address) // payerAddress
             );
             if (isset($contractCall['constant_result'][0])) {
