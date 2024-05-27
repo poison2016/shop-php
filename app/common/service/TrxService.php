@@ -94,6 +94,7 @@ class TrxService extends ComService
                 ],
                 $this->tron->address2HexString($address) // payerAddress
             );
+            var_dump($contractCall);exit();
             if (isset($contractCall['constant_result'][0])) {
                 $usdtBalanceHex = $contractCall['constant_result'][0];
                 $usdtBalance = hexdec($usdtBalanceHex) / 1e6; // 将余额转换为可读格式
