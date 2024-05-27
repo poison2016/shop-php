@@ -38,10 +38,7 @@
         "topthink/think-throttle": "^2.0",
         "ext-redis": "*",
         "myxtype/ethereum-client": "dev-master",
-        "bitwasp/bitcoin": "^1.0",
-        "bitwasp/bip39": "^1.0",
-        "kornrunner/ethereum-offline": "^1.0"
-
+        "iexbase/tron-api": "^5.0"
     },
     "require-dev": {
         "symfony/var-dumper": ">=4.2",

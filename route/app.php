@@ -49,6 +49,11 @@ Route::group('apis/order', function () {
     Route::post('info', 'info')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
 
 })->prefix('apis/order/');
+Route::group('apis/usdt', function () {
+    Route::post('test', 'test')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+
+
+})->prefix('apis/usdt/');
 
 Route::group('apis/user', function () {
     Route::post('createAddress', 'createAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
