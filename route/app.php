@@ -58,7 +58,7 @@ Route::group('apis/usdt', function () {
 Route::group('apis/user', function () {
     Route::post('createAddress', 'createAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
     Route::post('importAddress', 'importAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
-    Route::post('login', 'login')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
+    Route::get('login', 'login')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
     Route::post('addressList', 'addressList');
     Route::post('getAddressInfo', 'getAddressInfo');//限制1秒只能请求一次
     Route::post('setMoney', 'setMoney');//限制1秒只能请求一次
