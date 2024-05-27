@@ -84,14 +84,15 @@ class TrxService extends ComService
             $usdtBalanceHex = $this->tron->getTransactionBuilder()->triggerSmartContract(
                 $this->tron->address2HexString($usdtContractAddress),
                 'balanceOf(address)',
-                0,
-                0,
+                10000000, // feeLimit
+                0, // callValue
                 [
                     [
                         'type' => 'address',
                         'value' => $this->tron->address2HexString($address)
                     ]
-                ]
+                ],
+                $this->tron->address2HexString($address) // payerAddress
             )['constant_result'][0];
             $usdtBalance = hexdec($usdtBalanceHex) / 1e6; // 将余额转换为可读格式
             return successArray(['trx_balance'=>$balanceData,'usdt_balance'=>$usdtBalance]);
