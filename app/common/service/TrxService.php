@@ -28,6 +28,7 @@ class TrxService extends ComService
      * @param string $toAddress 发送给谁
      * @param double $amount 发送金额
      * @param string $prvKey 支付秘钥
+     * @param string $meAddress 支付地址
      * @return array|\think\response\Json
      */
     public function transfer($toAddress, $amount,$prvKey,$meAddress)
