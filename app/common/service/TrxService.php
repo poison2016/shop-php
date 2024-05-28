@@ -89,7 +89,7 @@ class TrxService extends ComService
                     ];
                 }
             }
-            return successArray(['data'=>$transactions]);
+            return successArray(['list'=>$processedTransactions]);
         } catch (\Exception $e) {
             Log::error('Get Transactions Error: ' . $e->getMessage());
             return errorArray($e->getMessage());
