@@ -2,6 +2,7 @@
 
 namespace app\common\service;
 
+use app\common\model\UserAddressLogModel;
 use IEXBase\TronAPI\Exception\TronException;
 use IEXBase\TronAPI\Provider\HttpProvider;
 use IEXBase\TronAPI\Tron;
@@ -11,17 +12,19 @@ use think\facade\Log;
 class TrxService extends ComService
 {
     protected $tron;
+    protected UserAddressLogModel $addressLogModel;
 
     /**配置
      * @throws \IEXBase\TronAPI\Exception\TronException
      */
-    public function __construct()
+    public function __construct(UserAddressLogModel $addressLogModel)
     {
         $config = Config::get('tron');
         $fullNode = new HttpProvider($config['full_node']);
         $solidityNode = new HttpProvider($config['solidity_node']);
         $eventServer = new HttpProvider($config['event_server']);
         $this->tron = new Tron($fullNode, $solidityNode, $eventServer);
+        $this->addressLogModel = $addressLogModel;
 
     }
 
@@ -32,14 +35,24 @@ class TrxService extends ComService
      * @param string $meAddress 支付地址
      * @return array|\think\response\Json
      */
-    public function transfer($toAddress, $amount,$prvKey,$meAddress)
+    public function transfer($toAddress, $amount,$prvKey,$meAddress,$userId = '123')
     {
         $this->tron->setAddress($meAddress);
         $this->tron->setPrivateKey($prvKey);
         $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
         $contract->setFeeLimit(40);
         $result = $contract->transfer($toAddress,$amount);
-        var_dump($result);
+        if($result['result']){
+            $this->addressLogModel->insert([
+                'user_id'=> $userId,
+                'address'=>$meAddress,
+                'txid'=>$result['txid'],
+                'money'=>$amount,
+                'create_time'=>time()
+            ]);
+            return successArray(['txid'=>$result['txid']],'交易中');
+        }
+        return errorArray('交易失败');
     }
 
 
@@ -52,6 +65,17 @@ class TrxService extends ComService
     public function getTrxList($address, int $limit = 50, int $start = 0): array
     {
         try {
+
+            $this->tron->setAddress($address);
+            $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
+            $ret = $contract->getTransactions($address);
+            var_dump($ret);exit();
+
+
+
+
+
+
             // 使用 GET 方法请求交易记录
             $endpoint = 'v1/accounts/' . $address . '/transactions/trc20';
             $params = [
