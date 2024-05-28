@@ -107,7 +107,7 @@ class TrxService extends ComService
             $contractCall = $this->tron->getTransactionBuilder()->triggerSmartContract(
                 $usdtContractAbi,
                 $usdtContractAddress,
-                'balanceOf(address)',
+                'balanceOf',
                 [
                     [
                         'type' => 'address',
