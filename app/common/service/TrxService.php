@@ -45,11 +45,18 @@ class TrxService extends ComService
      * @param int $start 开始 默认为0
      * @return array
      */
-    public function getTrxList($address, int $limit = 50, int $start = 0): array
+    public function getTrxList($address, int $limit = 10, int $start = 0): array
     {
-       $this->tron->setAddress($address);
-       $result = $this->tron->getLatestBlocks(20);
-       var_dump($result);
+        try {
+            $transactions = $this->tron->getManager()->request('v1/accounts/' . $address . '/transactions', [
+                'limit' => $limit,
+                'start' => $start
+            ]);
+            return successArray(['data'=>$transactions]);
+        } catch (\Exception $e) {
+            Log::error('Get Transactions Error: ' . $e->getMessage());
+            return errorArray($e->getMessage());
+        }
     }
 
     /**获取币种余额
