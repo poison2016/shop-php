@@ -61,6 +61,31 @@ class TrxService extends ComService
             $response = $client->request('GET', $url);
             // 解析响应内容
             $transactions = json_decode($response->getBody(), true);
+            $transactions = $transactionsData['data'] ?? [];
+
+            // 处理交易记录
+            $processedTransactions = [];
+            foreach ($transactions as $transaction) {
+                $tx = $transaction['raw_data']['contract'][0]['parameter']['value'];
+                $amount = $tx['amount'] / 1e6; // 转换为 TRX 单位
+                $timestamp = date('Y-m-d H:i:s', $transaction['block_timestamp'] / 1000);
+
+                if ($tx['owner_address'] == $this->tron->address2HexString($address)) {
+                    // 转出交易
+                    $processedTransactions[] = [
+                        'address' => $this->tron->hexString2Address($tx['to_address']),
+                        'time' => $timestamp,
+                        'amount' => '-' . $amount
+                    ];
+                } elseif ($tx['to_address'] == $this->tron->address2HexString($address)) {
+                    // 转入交易
+                    $processedTransactions[] = [
+                        'address' => $this->tron->hexString2Address($tx['owner_address']),
+                        'time' => $timestamp,
+                        'amount' => '+' . $amount
+                    ];
+                }
+            }
             return successArray(['data'=>$transactions]);
         } catch (\Exception $e) {
             Log::error('Get Transactions Error: ' . $e->getMessage());
