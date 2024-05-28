@@ -48,7 +48,7 @@ class TrxService extends ComService
     public function getTrxList($address, int $limit = 50, int $start = 0): array
     {
        $this->tron->setAddress($address);
-       $result = $this->tron->getBlock(50);
+       $result = $this->tron->getLatestBlocks(20);
        var_dump($result);
     }
 
