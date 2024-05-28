@@ -30,18 +30,13 @@ class TrxService extends ComService
      * @param string $prvKey 支付秘钥
      * @return array|\think\response\Json
      */
-    public function transfer($toAddress, $amount,$prvKey)
+    public function transfer($toAddress, $amount,$prvKey,$meAddress)
     {
+        $this->tron->setAddress($meAddress);
         $this->tron->setPrivateKey($prvKey);
-        try {
-            $transaction = $this->tron->getTransactionBuilder()->sendTrx($toAddress, $amount);
-            $signedTransaction = $this->tron->signTransaction($transaction);
-            $response = $this->tron->sendRawTransaction($signedTransaction);
-            return successArray(['ret'=>$response]);
-        } catch (\Exception $e) {
-            Log::error('TRX Transfer Error: ' . $e->getMessage());
-            return errorArray($e->getMessage());
-        }
+        $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
+        $result = $contract->transfer($toAddress,$amount);
+        var_dump($result);
     }
 
     /**获取交易记录
@@ -64,6 +59,13 @@ class TrxService extends ComService
         }
     }
 
+    /**获取币种余额
+     * @param $address 查询地址
+     * @param string $privateKey
+     * @return array
+     * @throws \IEXBase\TronAPI\Exception\TRC20Exception
+     * @throws \IEXBase\TronAPI\Exception\TronException
+     */
     public function getBalance($address,$privateKey = ''){
         $this->tron->setPrivateKey($privateKey);
         $this->tron->setAddress($address);
@@ -73,73 +75,5 @@ class TrxService extends ComService
         return successArray(['trx_balance'=>$balance,'usdt_balance'=>$balances]);
     }
 
-    /**获取币种余额
-     * @param string $address 钱包地址
-     * @param string $privateKey 钱包秘钥
-     * @return array
-     */
-    public function getBalance1($address,$privateKey = ''): array
-    {
-        $this->tron->setPrivateKey($privateKey);
-//        try {
-            $balance = $this->tron->getManager()->request('wallet/getaccount', [
-                'address' => $this->tron->address2HexString($address)
-            ]);
-
-            // 返回余额信息
-            $balanceData = isset($balance['balance']) ? $balance['balance'] : 0;
-            // 获取 USDT 余额
-            $usdtContractAddress = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t'; // USDT TRC20 合约地址
-//            $usdtContractAbi = Config::get('tron')['abi']; // USDT 合约的 ABI，请确保此处填写正确的 ABI
-//            $usdtContractAbi = json_decode($usdtContractAbi,true);
-                $usdtContractAbi = [
-                    [
-                        "constant" => true,
-                        "inputs" => [
-                            [
-                                "name" => "owner",
-                                "type" => "address"
-                            ]
-                        ],
-                        "name" => "balanceOf",
-                        "outputs" => [
-                            [
-                                "name" => "balance",
-                                "type" => "uint256"
-                            ]
-                        ],
-                        "payable" => false,
-                        "stateMutability" => "view",
-                        "type" => "function"
-                    ]
-                ];
-            $contractCall = $this->tron->getTransactionBuilder()->triggerSmartContract(
-                $usdtContractAbi,
-                $usdtContractAddress,
-                'balanceOf',
-                [
-                    [
-                        'type' => 'address',
-                        'value' => $this->tron->address2HexString($address)
-                    ],
-                ],
-                10000000, // feeLimit
-                $this->tron->address2HexString($address),
-                0, // callValue
-
-                // payerAddress
-            );
-            if (isset($contractCall['constant_result'][0])) {
-                $usdtBalanceHex = $contractCall['constant_result'][0];
-                $usdtBalance = hexdec($usdtBalanceHex) / 1e6; // 将余额转换为可读格式
-            } else {
-                $usdtBalance = 0;
-            }
-            return successArray(['trx_balance'=>$balanceData,'usdt_balance'=>$usdtBalance]);
-//        } catch (\Exception $e) {
-//            Log::error('Get Balance Error: ' . $e->getMessage());
-//            return errorArray($e->getMessage());
-//        }
-    }
 
 }

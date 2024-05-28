@@ -24,7 +24,7 @@ class UsdtService extends ComService
     }
 
     public function  test(string $address){
-        $ret = $this->trxService->getBalance($address);
+        $ret = $this->trxService->getTrxList($address);
         return $ret;
     }
 
