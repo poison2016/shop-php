@@ -77,13 +77,13 @@ class TrxService extends ComService
         return 5000;
     }
 
-    protected function increaseEnergy()
+    protected function increaseEnergy($address)
     {
         try {
             $freezeAmount = 1000; // 冻结 1000 TRX 增加能量
             $duration = 3;  // 冻结天数，最少为 3 天
 
-            $freezeTransaction = $this->tron->getTransactionBuilder()->freezeBalance($this->trxToSun($freezeAmount), $duration, 'ENERGY');
+            $freezeTransaction = $this->tron->getTransactionBuilder()->freezeBalance($this->trxToSun($freezeAmount), $duration, 'ENERGY',$address);
 
             // 签署交易
             $signedFreezeTransaction = $this->tron->signTransaction($freezeTransaction);
