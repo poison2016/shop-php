@@ -68,7 +68,7 @@ class TrxService extends ComService
         $this->tron->setPrivateKey($privateKey);
 //        try {
         $balance = $this->tron->getBalance($address,false);
-        var_dump($balance);exit();
+        var_dump(sprintf("Trx余额：%s\n", $balance));exit();
 
 
     }
