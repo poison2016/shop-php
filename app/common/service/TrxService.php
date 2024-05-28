@@ -48,10 +48,19 @@ class TrxService extends ComService
     public function getTrxList($address, int $limit = 10, int $start = 0): array
     {
         try {
-            $transactions = $this->tron->getManager()->request('v1/accounts/' . $address . '/transactions', [
+            // 使用 GET 方法请求交易记录
+            $endpoint = 'v1/accounts/' . $address . '/transactions';
+            $params = [
                 'limit' => $limit,
                 'start' => $start
-            ]);
+            ];
+            // 拼接完整的 URL
+            $url = 'https://api.trongrid.io/' . $endpoint . '?' . http_build_query($params);
+            // 使用 Guzzle 进行 GET 请求
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('GET', $url);
+            // 解析响应内容
+            $transactions = json_decode($response->getBody(), true);
             return successArray(['data'=>$transactions]);
         } catch (\Exception $e) {
             Log::error('Get Transactions Error: ' . $e->getMessage());
