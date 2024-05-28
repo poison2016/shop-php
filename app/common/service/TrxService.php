@@ -69,7 +69,7 @@ class TrxService extends ComService
             $this->tron->setAddress($address);
             $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
             $ret = $contract->getTransactions($address);
-            var_dump($ret);exit();
+            var_dump($ret['data']);exit();
 
 
 
