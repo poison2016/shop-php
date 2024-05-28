@@ -49,11 +49,10 @@ class TrxService extends ComService
     {
         try {
             // 使用 GET 方法请求交易记录
-            $endpoint = 'v1/accounts/' . $address . '/transactions';
+            $endpoint = 'v1/accounts/' . $address . '/transactions/trc20';
             $params = [
                 'limit' => $limit,
                 'start' => $start,
-                'contractType' => 'usdt,trx',
             ];
             // 拼接完整的 URL
             $url = 'https://api.trongrid.io/' . $endpoint . '?' . http_build_query($params);
@@ -66,32 +65,27 @@ class TrxService extends ComService
             // 处理交易记录
             $processedTransactions = [];
             foreach ($transactions as $transaction) {
-                var_dump($transaction);
-                $tx = $transaction['raw_data']['contract'][0]['parameter']['value'];
-                $amount = 0;
-                if(empty($tx['amount']) || empty($tx['owner_address']) || empty($tx['to_address']) ){
-                    continue;
-                }
-                $amount = $tx['amount'] / 1e6; // 转换为 TRX 单位
-                if(is_numeric($amount)){
-                    echo '是';
-                }else{
-                    echo "否";
-                }
+                $raddress = $transaction['from'];
+                $toAddress = $transaction['to'];
+                $name = $transaction['token_info']['symbol'];
+
+                $amount = $transaction['value'] / 1e6; // 转换为 TRX 单位
+
                 $timestamp = date('Y-m-d H:i:s', $transaction['block_timestamp'] / 1000);
-                if ($tx['owner_address'] == $this->tron->address2HexString($address)) {
-                    // 转出交易
+                if($toAddress == $address){
                     $processedTransactions[] = [
-                        'address' => $this->tron->hexString2Address($tx['to_address']),
+                        'address' => $raddress,
                         'time' => $timestamp,
-                        'amount' => '-' . $amount
+                        'amount' => '+' . $amount,
+                        'type'=>$name,
                     ];
-                } elseif ($tx['to_address'] == $this->tron->address2HexString($address)) {
+                } elseif ($raddress == $address) {
                     // 转入交易
                     $processedTransactions[] = [
-                        'address' => $this->tron->hexString2Address($tx['owner_address']),
+                        'address' => $toAddress,
                         'time' => $timestamp,
-                        'amount' => '+' . $amount
+                        'amount' => '-' . $amount,
+                        'type'=>$name,
                     ];
                 }
             }
