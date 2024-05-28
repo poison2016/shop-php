@@ -60,8 +60,7 @@ class TrxService extends ComService
             $client = new \GuzzleHttp\Client();
             $response = $client->request('GET', $url);
             // 解析响应内容
-            $transactions = json_decode($response->getBody(), true);
-            var_dump($transactions['data']);
+            $transactionsData = json_decode($response->getBody(), true);
             $transactions = $transactionsData['data'] ?? [];
             // 处理交易记录
             $processedTransactions = [];
