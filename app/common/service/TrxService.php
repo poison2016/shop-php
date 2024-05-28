@@ -66,6 +66,7 @@ class TrxService extends ComService
             // 处理交易记录
             $processedTransactions = [];
             foreach ($transactions as $transaction) {
+                var_dump($transaction);exit();
                 $tx = $transaction['raw_data']['contract'][0]['parameter']['value'];
                 $amount = 0;
                 if(empty($tx['amount']) || empty($tx['owner_address']) || empty($tx['to_address']) ){
@@ -73,7 +74,6 @@ class TrxService extends ComService
                 }
                 $amount = $tx['amount'] / 1e6; // 转换为 TRX 单位
                 $timestamp = date('Y-m-d H:i:s', $transaction['block_timestamp'] / 1000);
-                var_dump($tx);exit();
                 if ($tx['owner_address'] == $this->tron->address2HexString($address)) {
                     // 转出交易
                     $processedTransactions[] = [
