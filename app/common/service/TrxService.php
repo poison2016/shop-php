@@ -70,6 +70,7 @@ class TrxService extends ComService
         $balance = $this->tron->getBalance($address,false);
         var_dump(sprintf("Trx余额：%s\n", $balance));
         $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
+        var_dump($contract);
         $balances = $contract->balanceOf();
         var_dump('usdt:'.$balances);
     }
