@@ -45,7 +45,7 @@ class TrxService extends ComService
      * @param int $start 开始 默认为0
      * @return array
      */
-    public function getTrxList($address, int $limit = 10, int $start = 0): array
+    public function getTrxList($address, int $limit = 1, int $start = 0): array
     {
         try {
             // 使用 GET 方法请求交易记录
@@ -63,6 +63,7 @@ class TrxService extends ComService
             $transactionsData = json_decode($response->getBody(), true);
             $transactions = $transactionsData['data'] ?? [];
             // 处理交易记录
+            var_dump($transactions);exit();
             $processedTransactions = [];
             foreach ($transactions as $transaction) {
                 $tx = $transaction['raw_data']['contract'][0]['parameter']['value'];
