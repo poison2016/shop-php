@@ -68,31 +68,11 @@ class TrxService extends ComService
 
             $this->tron->setAddress($address);
             $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
-            $ret = $contract->getTransactions($address);
-            var_dump($ret['data']);exit();
-
-
-
-
-
-
-            // 使用 GET 方法请求交易记录
-            $endpoint = 'v1/accounts/' . $address . '/transactions/trc20';
-            $params = [
-                'limit' => $limit,
-                'start' => $start,
-            ];
-            // 拼接完整的 URL
-            $url = 'https://api.trongrid.io/' . $endpoint . '?' . http_build_query($params);
-            // 使用 Guzzle 进行 GET 请求
-            $client = new \GuzzleHttp\Client();
-            $response = $client->request('GET', $url);
-            // 解析响应内容
-            $transactionsData = json_decode($response->getBody(), true);
-            $transactions = $transactionsData['data'] ?? [];
+            $transactions = $contract->getTransactions($address);
+            $transactiond = $transactions['data'];
             // 处理交易记录
             $processedTransactions = [];
-            foreach ($transactions as $transaction) {
+            foreach ($transactiond as $transaction) {
                 $raddress = $transaction['from'];
                 $toAddress = $transaction['to'];
                 $name = $transaction['token_info']['symbol'];
