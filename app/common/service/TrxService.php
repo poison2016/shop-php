@@ -64,12 +64,21 @@ class TrxService extends ComService
         }
     }
 
+    public function getBalance($address,$privateKey = ''){
+        $this->tron->setPrivateKey($privateKey);
+//        try {
+        $balance = $this->tron->getBalance($address,false);
+        var_dump($balance);exit();
+
+
+    }
+
     /**获取币种余额
      * @param string $address 钱包地址
      * @param string $privateKey 钱包秘钥
      * @return array
      */
-    public function getBalance($address,$privateKey = ''): array
+    public function getBalance1($address,$privateKey = ''): array
     {
         $this->tron->setPrivateKey($privateKey);
 //        try {
