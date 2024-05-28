@@ -45,7 +45,7 @@ class TrxService extends ComService
      * @param int $start 开始 默认为0
      * @return array
      */
-    public function getTrxList($address, int $limit = 20, int $start = 0): array
+    public function getTrxList($address, int $limit = 50, int $start = 0): array
     {
         try {
             // 使用 GET 方法请求交易记录
