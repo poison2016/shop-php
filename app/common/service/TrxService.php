@@ -42,6 +42,8 @@ class TrxService extends ComService
     }
 
     public function transferNew($toAddress, $amount,$prvKey,$meAddress){
+        $this->tron->setAddress($meAddress);
+        $this->tron->setPrivateKey($prvKey);
         // 检查账户能量
         $accountInfo = $this->tron->getAccount();
         $energy = $accountInfo['energy'] ?? 0;
