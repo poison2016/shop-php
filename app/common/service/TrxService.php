@@ -50,7 +50,7 @@ class TrxService extends ComService
 
         if ($energy < $this->calculateRequiredEnergy($amount)) {
             // 增加能量
-            $this->increaseEnergy();
+            $this->increaseEnergy($meAddress);
         }
 
         // 创建交易并设置 Fee_limit
