@@ -37,65 +37,11 @@ class TrxService extends ComService
         $this->tron->setAddress($meAddress);
         $this->tron->setPrivateKey($prvKey);
         $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
+        $contract->setFeeLimit(30);
         $result = $contract->transfer($toAddress,$amount);
         var_dump($result);
     }
 
-    public function transferNew($toAddress, $amount,$prvKey,$meAddress){
-        $this->tron->setAddress($meAddress);
-        $this->tron->setPrivateKey($prvKey);
-        // 检查账户能量
-        $accountInfo = $this->tron->getAccount();
-        $energy = $accountInfo['energy'] ?? 0;
-
-        if ($energy < $this->calculateRequiredEnergy($amount)) {
-            // 增加能量
-            $this->increaseEnergy($meAddress);
-        }
-
-        // 创建交易并设置 Fee_limit
-        $transaction = $this->tron->getTransactionBuilder()->sendTrx($toAddress, $amount);
-        $transaction['raw_data']['fee_limit'] = 10000000; // 设置适当的 Fee_limit
-
-        // 签署交易
-        $signedTransaction = $this->tron->signTransaction($transaction);
-
-        // 广播交易
-        $response = $this->tron->sendRawTransaction($signedTransaction);
-        var_dump($response);
-    }
-
-    protected function trxToSun($amount)
-    {
-        return $amount * 1000000;
-    }
-
-    protected function calculateRequiredEnergy($amount)
-    {
-        // 估算所需的能量，具体逻辑根据实际情况调整
-        // 此处仅为示例，假设每笔交易需要 5000 能量
-        return 5000;
-    }
-
-    protected function increaseEnergy($address)
-    {
-        try {
-            $freezeAmount = 1000; // 冻结 1000 TRX 增加能量
-            $duration = 3;  // 冻结天数，最少为 3 天
-
-            $freezeTransaction = $this->tron->getTransactionBuilder()->freezeBalance($this->trxToSun($freezeAmount), $duration, 'ENERGY',$address);
-
-            // 签署交易
-            $signedFreezeTransaction = $this->tron->signTransaction($freezeTransaction);
-
-            // 广播交易
-            $response = $this->tron->sendRawTransaction($signedFreezeTransaction);
-
-            return $response;
-        } catch (TronException $e) {
-            throw new \Exception('Failed to increase energy: ' . $e->getMessage());
-        }
-    }
 
     /**获取交易记录
      * @param string $address 钱包地址
