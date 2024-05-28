@@ -65,9 +65,8 @@ class TrxService extends ComService
             $transactions = $transactionsData['data'] ?? [];
             // 处理交易记录
             $processedTransactions = [];
-            var_dump($transactionsData);exit();
             foreach ($transactions as $transaction) {
-//                var_dump($transaction);
+                var_dump($transaction);
                 $tx = $transaction['raw_data']['contract'][0]['parameter']['value'];
                 $amount = 0;
                 if(empty($tx['amount']) || empty($tx['owner_address']) || empty($tx['to_address']) ){
