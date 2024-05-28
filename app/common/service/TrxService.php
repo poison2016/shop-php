@@ -62,7 +62,7 @@ class TrxService extends ComService
             // 解析响应内容
             $transactions = json_decode($response->getBody(), true);
             $transactions = $transactionsData['data'] ?? [];
-
+            var_dump($transactions);exit();
             // 处理交易记录
             $processedTransactions = [];
             foreach ($transactions as $transaction) {
