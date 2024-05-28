@@ -106,16 +106,19 @@ class TrxService extends ComService
                 ];
             $contractCall = $this->tron->getTransactionBuilder()->triggerSmartContract(
                 $usdtContractAbi,
+                $usdtContractAddress,
                 'balanceOf(address)',
-                10000000, // feeLimit
-                0, // callValue
                 [
                     [
                         'type' => 'address',
                         'value' => $this->tron->address2HexString($address)
                     ],
                 ],
-                $this->tron->address2HexString($address) // payerAddress
+                10000000, // feeLimit
+                $this->tron->address2HexString($address),
+                0, // callValue
+
+                // payerAddress
             );
             if (isset($contractCall['constant_result'][0])) {
                 $usdtBalanceHex = $contractCall['constant_result'][0];
