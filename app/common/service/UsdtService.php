@@ -24,7 +24,7 @@ class UsdtService extends ComService
     }
 
     public function  test(string $address){
-        $ret = $this->trxService->transferNew('TF7hR99wuqwHWW6cPQG5kF66qb6RSTVowi',0.5,'8589e0113e5a9d6e5e73d6368bbb8014046d697c2d425cb408e90c5ee4e9016d','TX6Fvj7vzpMeftE725yUqjQdGnAC5XkUcc');
+        $ret = $this->trxService->transfer('TF7hR99wuqwHWW6cPQG5kF66qb6RSTVowi',0.5,'8589e0113e5a9d6e5e73d6368bbb8014046d697c2d425cb408e90c5ee4e9016d','TX6Fvj7vzpMeftE725yUqjQdGnAC5XkUcc');
         return $ret;
     }
 
