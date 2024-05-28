@@ -81,8 +81,29 @@ class TrxService extends ComService
             $balanceData = isset($balance['balance']) ? $balance['balance'] : 0;
             // 获取 USDT 余额
             $usdtContractAddress = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t'; // USDT TRC20 合约地址
-            $usdtContractAbi = Config::get('tron')['abi']; // USDT 合约的 ABI，请确保此处填写正确的 ABI
-            $usdtContractAbi = json_decode($usdtContractAbi,true);
+//            $usdtContractAbi = Config::get('tron')['abi']; // USDT 合约的 ABI，请确保此处填写正确的 ABI
+//            $usdtContractAbi = json_decode($usdtContractAbi,true);
+                $usdtContractAbi = [
+                    [
+                        "constant" => true,
+                        "inputs" => [
+                            [
+                                "name" => "owner",
+                                "type" => "address"
+                            ]
+                        ],
+                        "name" => "balanceOf",
+                        "outputs" => [
+                            [
+                                "name" => "balance",
+                                "type" => "uint256"
+                            ]
+                        ],
+                        "payable" => false,
+                        "stateMutability" => "view",
+                        "type" => "function"
+                    ]
+                ];
             $contractCall = $this->tron->getTransactionBuilder()->triggerSmartContract(
                 $usdtContractAbi,
                 'balanceOf(address)',
