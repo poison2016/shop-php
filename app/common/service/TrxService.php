@@ -67,15 +67,10 @@ class TrxService extends ComService
     public function getBalance($address,$privateKey = ''){
         $this->tron->setPrivateKey($privateKey);
         $this->tron->setAddress($address);
-//        try {
-        $balance = $this->tron->getBalance($address,false);
-        var_dump(sprintf("Trx余额：%s\n", $balance));
-
+        $balance = $this->tron->getBalance($address,true);
         $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
-        var_dump($contract);
         $balances = $contract->balanceOf();
-        var_dump('usdt:'.$balances);
-
+        return successArray(['trx_balance'=>$balance,'usdt_balance'=>$balances]);
     }
 
     /**获取币种余额
