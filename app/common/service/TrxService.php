@@ -45,7 +45,7 @@ class TrxService extends ComService
      * @param int $start 开始 默认为0
      * @return array
      */
-    public function getTrxList($address, int $limit = 1, int $start = 0): array
+    public function getTrxList($address, int $limit = 20, int $start = 0): array
     {
         try {
             // 使用 GET 方法请求交易记录
@@ -63,14 +63,14 @@ class TrxService extends ComService
             $transactionsData = json_decode($response->getBody(), true);
             $transactions = $transactionsData['data'] ?? [];
             // 处理交易记录
-            var_dump($transactions);exit();
             $processedTransactions = [];
             foreach ($transactions as $transaction) {
                 $tx = $transaction['raw_data']['contract'][0]['parameter']['value'];
                 $amount = 0;
-                if(!empty($tx['amount'])){
-                    $amount = $tx['amount'] / 1e6; // 转换为 TRX 单位
+                if(empty($tx['amount']) || empty($tx['owner_address']) || empty($tx['to_address']) ){
+                    continue;
                 }
+                $amount = $tx['amount'] / 1e6; // 转换为 TRX 单位
                 $timestamp = date('Y-m-d H:i:s', $transaction['block_timestamp'] / 1000);
 
                 if ($tx['owner_address'] == $this->tron->address2HexString($address)) {
