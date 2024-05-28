@@ -65,6 +65,7 @@ class TrxService extends ComService
             // 处理交易记录
             $processedTransactions = [];
             foreach ($transactions as $transaction) {
+                var_dump($transaction['raw_data']['contract'][0]['parameter']['value']);exit();
                 $tx = $transaction['raw_data']['contract'][0]['parameter']['value'];
                 $amount = $tx['amount'] / 1e6; // 转换为 TRX 单位
                 $timestamp = date('Y-m-d H:i:s', $transaction['block_timestamp'] / 1000);
