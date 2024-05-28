@@ -83,9 +83,8 @@ class TrxService extends ComService
             $usdtContractAddress = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t'; // USDT TRC20 合约地址
             $usdtContractAbi = Config::get('tron')['abi']; // USDT 合约的 ABI，请确保此处填写正确的 ABI
         $usdtContractAbi = json_decode($usdtContractAbi,true);
-        var_dump($usdtContractAbi);exit();
             $contractCall = $this->tron->getTransactionBuilder()->triggerSmartContract(
-                $this->tron->address2HexString($usdtContractAddress),
+                $usdtContractAbi,
                 'balanceOf(address)',
                 10000000, // feeLimit
                 0, // callValue
