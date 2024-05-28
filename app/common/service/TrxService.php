@@ -52,7 +52,8 @@ class TrxService extends ComService
             $endpoint = 'v1/accounts/' . $address . '/transactions';
             $params = [
                 'limit' => $limit,
-                'start' => $start
+                'start' => $start,
+                'contractType' => 'usdt,trx',
             ];
             // 拼接完整的 URL
             $url = 'https://api.trongrid.io/' . $endpoint . '?' . http_build_query($params);
