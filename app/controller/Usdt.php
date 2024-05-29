@@ -38,6 +38,16 @@ class Usdt extends BaseController
         return $this->requestData($this->usdtService->SendMoney($params));
     }
 
+    public function transactionList(Request $request){
+        $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+        $params['address'] = input('address','');
+        $rule = [
+            'address' => ['must', '', '地址不能为空'],
+        ];
+        FilterValid::filterData($params, $rule);
+        return $this->requestData($this->usdtService->getList($params));
+    }
+
     public function test(){
         return $this->requestData($this->usdtService->test(input('address')));
     }
