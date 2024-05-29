@@ -51,7 +51,7 @@ class UsdtService extends ComService
             $trx = $this->trxService->getBalance($userAddressInfo['address'])['data'];
             $userAddressInfo['usdt_balance'] = 'USDT:' . formatNumber($trx['usdt_balance']);
         }
-        return successArray();
+        return successArray($userAddressInfo);
     }
 
     public function getList($params){
