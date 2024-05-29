@@ -24,8 +24,8 @@ class UsdtService extends ComService
            $v['address_sub'] = customSubstr($v['address']);
             if($v['type'] == 1){//trx
                 $trx = $this->trxService->getBalance($v['address'])['data'];
-                $v['balance'] = 'Trx:'.$trx['balance'];
-                $v['usdt_balance'] = 'Usdt:'.$trx['usdt_balance'];
+                $v['balance'] = 'Trx:'.formatNumber($trx['balance']);
+                $v['usdt_balance'] = 'Usdt:'.formatNumber($trx['usdt_balance']);
             }
        }
        return successArray($data);

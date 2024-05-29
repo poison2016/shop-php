@@ -336,6 +336,17 @@ function passwordV($password,$jPassword): bool
     }
 }
 
+function formatNumber($number) {
+    // 检查小数点后面是否为 0
+    if (floor($number) == $number) {
+        // 如果是整数，直接返回整数部分
+        return (int)$number;
+    } else {
+        // 否则返回原来的小数
+        return $number;
+    }
+}
+
 function customSubstr($string): string
 {
     $start = substr($string, 0, 6); // 前6位
