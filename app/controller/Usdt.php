@@ -17,7 +17,8 @@ class Usdt extends BaseController
     }
 
     public function userWalletList(Request $request){
-       return $this->requestData($this->usdtService->getUserAddressList($request->comUserId));
+        $userId = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+       return $this->requestData($this->usdtService->getUserAddressList($userId));
     }
 
     public function test(){
