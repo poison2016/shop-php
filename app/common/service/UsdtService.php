@@ -21,6 +21,7 @@ class UsdtService extends ComService
     {
        $data = $this->userAddressModel->field('id,user_id,address,type,name')->where('user_id',$userId)->select()->toArray();
        foreach ($data as &$v){
+           $v['address_sub'] = customSubstr($v['address']);
             if($v['type'] == 1){//trx
                 $trx = $this->trxService->getBalance($v['address'])['data'];
                 $v['balance'] = 'Trx:'.$trx['balance'];

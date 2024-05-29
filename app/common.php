@@ -336,6 +336,13 @@ function passwordV($password,$jPassword): bool
     }
 }
 
+function customSubstr($string): string
+{
+    $start = substr($string, 0, 6); // 前6位
+    $end = substr($string, -6); // 最后6位
+    return $start . '...' . $end; // 用...表示中间被截取部分
+}
+
 
 /**返回成功的信息
  * @param array $data
