@@ -43,6 +43,17 @@ class UsdtService extends ComService
 
     }
 
+    public function getAddressInfo($params)
+    {
+        $userAddressInfo = $this->userAddressModel->field('id,user_id,address,type,name')->where(['address' => $params['address'], 'user_id' => $params['user_id']])->find();
+        if (!$userAddressInfo) return errorArray('地址不存在');
+        if ($userAddressInfo['type'] == 1) {
+            $trx = $this->trxService->getBalance($userAddressInfo['address'])['data'];
+            $userAddressInfo['usdt_balance'] = 'USDT:' . formatNumber($trx['usdt_balance']);
+        }
+        return successArray();
+    }
+
     public function getList($params){
         $userAddressInfo = $this->userAddressModel->where(['address'=>$params['address'],'user_id'=>$params['user_id']])->find();
         if(!$userAddressInfo) return errorArray('地址不存在');
