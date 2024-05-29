@@ -19,7 +19,7 @@ class UsdtService extends ComService
 
     public function getUserAddressList($userId): array
     {
-       $data = $this->userAddressModel->where('user_id',$userId)->select()->toArray();
+       $data = $this->userAddressModel->field('id,user_id,address,type,name')->where('user_id',$userId)->select()->toArray();
        foreach ($data as &$v){
             if($v['type'] == 1){//trx
                 $trx = $this->trxService->getBalance($v['address'])['data'];
