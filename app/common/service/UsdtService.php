@@ -20,7 +20,16 @@ class UsdtService extends ComService
     public function getUserAddressList($userId): array
     {
        $data = $this->userAddressModel->where('user_id',$userId)->select()->toArray();
+       foreach ($data as &$v){
+            if($v['type'] == 1){//trx
+                $v['balance'] = $this->trxService->getBalance($v['address'])['data'];
+            }
+       }
        return successArray($data);
+    }
+
+    public function SendMoney(){
+
     }
 
     public function  test(string $address){

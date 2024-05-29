@@ -40,7 +40,7 @@ class TrxService extends ComService
         $this->tron->setAddress($meAddress);
         $this->tron->setPrivateKey($prvKey);
         $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
-        $contract->setFeeLimit(40);
+        $contract->setFeeLimit(100);
         $result = $contract->transfer($toAddress,$amount);
         if($result['result']){
             $this->addressLogModel->insert([
@@ -117,7 +117,7 @@ class TrxService extends ComService
         $balance = $this->tron->getBalance($address,true);
         $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
         $balances = $contract->balanceOf();
-        return successArray(['trx_balance'=>$balance,'usdt_balance'=>$balances]);
+        return successArray(['balance'=>$balance,'usdt_balance'=>$balances]);
     }
 
 

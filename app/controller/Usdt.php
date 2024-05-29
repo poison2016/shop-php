@@ -16,7 +16,7 @@ class Usdt extends BaseController
         $this->usdtService = $usdtService;
     }
 
-    public function UserWalletList(Request $request){
+    public function userWalletList(Request $request){
        return $this->requestData($this->usdtService->getUserAddressList($request->comUserId));
     }
 
