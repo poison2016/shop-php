@@ -49,7 +49,7 @@ class UsdtService extends ComService
         if (!$userAddressInfo) return errorArray('地址不存在');
         if ($userAddressInfo['type'] == 1) {
             $trx = $this->trxService->getBalance($userAddressInfo['address'])['data'];
-            $userAddressInfo['usdt_balance'] = 'USDT:' . formatNumber($trx['usdt_balance']);
+            $userAddressInfo['usdt_balance'] = formatNumber($trx['usdt_balance']);
         }
         return successArray($userAddressInfo);
     }
