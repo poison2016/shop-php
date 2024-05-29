@@ -22,7 +22,9 @@ class UsdtService extends ComService
        $data = $this->userAddressModel->where('user_id',$userId)->select()->toArray();
        foreach ($data as &$v){
             if($v['type'] == 1){//trx
-                $v['balance'] = $this->trxService->getBalance($v['address'])['data'];
+                $trx = $this->trxService->getBalance($v['address'])['data'];
+                $v['balance'] = 'Trx:'.$trx['balance'];
+                $v['usdt_balance'] = 'Usdt:'.$trx['balance'];
             }
        }
        return successArray($data);
