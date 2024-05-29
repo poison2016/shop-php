@@ -31,7 +31,15 @@ class UsdtService extends ComService
        return successArray($data);
     }
 
-    public function SendMoney(){
+    public function SendMoney($params){
+        $userAddressInfo = $this->userAddressModel->where(['address'=>$params['address'],'user_id'=>$params['user_id']])->find();
+        if(!$userAddressInfo) return errorArray('地址不存在');
+        if($userAddressInfo['password'] !== md5Password($params['pay_password'])) return  errorArray('钱包密码不正确');
+        if($userAddressInfo['type'] == 1){//trx
+            return $this->trxService->transfer('',$params['money'],$userAddressInfo['prv_key'],$userAddressInfo['address'],$params['user_id']);
+        }else{//Eth
+
+        }
 
     }
 
