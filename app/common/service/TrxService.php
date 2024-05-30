@@ -120,5 +120,4 @@ class TrxService extends ComService
         return successArray(['balance'=>$balance,'usdt_balance'=>$balances]);
     }
 
-
 }
