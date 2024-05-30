@@ -55,7 +55,7 @@ Route::group('apis/usdt', function () {
     Route::post('walletPay', 'walletPay')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
     Route::post('transactionList', 'transactionList')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
     Route::post('getAddressInfo', 'getAddressInfo')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
-
+    Route::post('saveAddress', 'saveAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
 })->prefix('apis/usdt/');
 
 Route::group('apis/user', function () {
