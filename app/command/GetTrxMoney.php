@@ -11,6 +11,7 @@ use think\console\input\Argument;
 use think\console\input\Option;
 use think\console\Output;
 use think\facade\Config;
+use think\facade\Db;
 
 class GetTrxMoney extends Command
 {
@@ -29,8 +30,13 @@ class GetTrxMoney extends Command
         $solidityNode = new HttpProvider($config['solidity_node']);
         $eventServer = new HttpProvider($config['event_server']);
         $this->tron = new Tron($fullNode, $solidityNode, $eventServer);
-        $this->tron->setAddress($address);
-        $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
-        $transactions = $contract->getTransactions($address);
+        $data = Db::name('t_admin_address')->where('type',1)->select();
+        foreach ($data as $v){
+            $this->tron->setAddress($v['address']);
+            $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
+            $transactions = $contract->getTransactions($v['address'],200);
+            var_dump($transactions);
+        }
+
     }
 }
