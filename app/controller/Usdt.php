@@ -63,7 +63,7 @@ class Usdt extends BaseController
         $params['address'] = input('address','');
         $params['prv_key'] = input('private_key','');
         $params['name'] = input('name','');
-        $params['pay_password'] = input('password','');
+        $params['pay_password'] = input('pay_password','');
         $params['type'] = input('type','');
         $rule = [
             'address' => ['must', '', '地址不能为空'],
