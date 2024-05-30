@@ -12,41 +12,41 @@ use think\facade\Route;
 
 
 Route::group('index', function () {
-    Route::get('hello', '');
+    Route::any('hello', '');
 })->prefix('index/');
 
 //图片上传
 Route::group('image', function () {
-    Route::post('upload', 'upload');
+    Route::any('upload', 'upload');
 })->prefix('image/');
 
 Route::group('apis/goods', function () {
-    Route::post('list','list');
-    Route::post('info','info');
+    Route::any('list','list');
+    Route::any('info','info');
 
 })->prefix('apis/goods/');
 
 Route::group('apis/test', function () {
-    Route::get('index','index');
+    Route::any('index','index');
 })->prefix('apis/test/');
 Route::group('admins/admin', function () {
-    Route::post('getGoodsList','getGoodsList');
-    Route::post('getGoodsInfo','getGoodsInfo');
-    Route::post('insertGoods','insertGoods');
-    Route::post('updateGoods','updateGoods');
-    Route::post('delGoods','delGoods');
-    Route::post('orderList','orderList');
-    Route::post('orderInfo','orderInfo');
-    Route::post('delOrder','delOrder');
-    Route::post('coinList','coinList');
-    Route::post('delCoin','delCoin');
-    Route::post('uploadImg','uploadImg');
+    Route::any('getGoodsList','getGoodsList');
+    Route::any('getGoodsInfo','getGoodsInfo');
+    Route::any('insertGoods','insertGoods');
+    Route::any('updateGoods','updateGoods');
+    Route::any('delGoods','delGoods');
+    Route::any('orderList','orderList');
+    Route::any('orderInfo','orderInfo');
+    Route::any('delOrder','delOrder');
+    Route::any('coinList','coinList');
+    Route::any('delCoin','delCoin');
+    Route::any('uploadImg','uploadImg');
 })->prefix('admins/admin/');
 
 Route::group('apis/order', function () {
-    Route::post('create', 'create')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
-    Route::post('list', 'list');
-    Route::post('info', 'info')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+    Route::any('create', 'create')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+    Route::any('list', 'list');
+    Route::any('info', 'info')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
 
 })->prefix('apis/order/');
 Route::group('apis/usdt', function () {
@@ -59,13 +59,13 @@ Route::group('apis/usdt', function () {
 })->prefix('apis/usdt/');
 
 Route::group('apis/user', function () {
-    Route::post('createAddress', 'createAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
-    Route::post('importAddress', 'importAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
-    Route::get('login', 'login')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
-    Route::post('addressList', 'addressList');
-    Route::post('getAddressInfo', 'getAddressInfo');//限制1秒只能请求一次
-    Route::post('setMoney', 'setMoney');//限制1秒只能请求一次
-    Route::post('getUserInfo', 'getUserInfo');//限制1秒只能请求一次
+    Route::any('createAddress', 'createAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+    Route::any('importAddress', 'importAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
+    Route::any('login', 'login')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
+    Route::any('addressList', 'addressList');
+    Route::any('getAddressInfo', 'getAddressInfo');//限制1秒只能请求一次
+    Route::any('setMoney', 'setMoney');//限制1秒只能请求一次
+    Route::any('getUserInfo', 'getUserInfo');//限制1秒只能请求一次
 })->prefix('apis/user/');
 
 Route::group(function () {
@@ -76,14 +76,14 @@ Route::group(function () {
 
 //登陆相关
 Route::group('signin', function () {
-    Route::post('login', 'login')->middleware('\app\middleware\Throttle');//登陆接口
+    Route::any('login', 'login')->middleware('\app\middleware\Throttle');//登陆接口
 })->prefix('signin/');
 
 
 
 // 测试类，扔一些测试内筒
 Route::group('Test', function () {
-    Route::post('textScan', 'textScan');
-    Route::get('test', 'test');
-    Route::get('jdTest', 'jdTest');
+    Route::any('textScan', 'textScan');
+    Route::any('test', 'test');
+    Route::any('jdTest', 'jdTest');
 })->prefix('Test/');
