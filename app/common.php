@@ -162,7 +162,7 @@ function create_rand_str($length)
 
 function getCurlData($url)
 {
-    echo $url;
+    //echo $url;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -176,7 +176,6 @@ function getCurlData($url)
         $errorMessage = curl_error($ch);
         trace('cURL 错误代码: ' . $errorCode . ' 错误信息: ' . $errorMessage,'error');
     } else {
-        var_dump(11111);
         $data = json_decode($response, true);
         return $data;
 
