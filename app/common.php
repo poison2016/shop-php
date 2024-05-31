@@ -160,7 +160,7 @@ function create_rand_str($length)
     return $rand_str;
 }
 
-public function getCurlData($url)
+function getCurlData($url)
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -170,8 +170,6 @@ public function getCurlData($url)
     if (curl_errno($ch)) {
         echo '错误:' . curl_error($ch);
     } else {
-        var_dump(111222);
-        var_dump($response);
         $data = json_decode($response, true);
         print_r($data);
     }
