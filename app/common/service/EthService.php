@@ -79,48 +79,65 @@ class EthService extends ComService
         $web3 = new Web3(new HttpProvider(new HttpRequestManager($infuraUrl)));
         $usdtContractAddress = '0xdac17f958d2ee523a2206206994597c13d831ec7'; // USDT 合约地址
         $usdtDecimals = 6; // USDT 代币的小数位数
+
 // 转账数量（例如，发送 100 USDT）
         $amountInWei = bcmul($amount, bcpow('10', $usdtDecimals));
-
 // 构建交易数据
-        $contract = new Contract($web3->getProvider(), [], file_get_contents('path_to_abi.json')); // 从 ABI 文件加载合约
-        $transactionData = $contract->getData('transfer', $to, $amountInWei);
-
+        $contract = new Contract($web3->getProvider(), json_decode(file_get_contents('path_to_usdt_abi.json'), true));
+        $transactionData = $contract->at($usdtContractAddress)->getData('transfer', $to, $amountInWei);
+        var_dump('接收数据');
+        var_dump($transactionData);
 // 获取账户 nonce
-        $nonce = $web3->eth->getTransactionCount($from, 'pending')->val();
-
-// 创建交易对象
-        $transaction = [
-            'nonce' => '0x' . dechex($nonce),
-            'from' => $from,
-            'to' => $usdtContractAddress,
-            'value' => '0x0',
-            'gas' => '0x186a0', // gas 限制
-            'gasPrice' => '0x12a05f200', // gas 价格
-            'data' => $transactionData,
-        ];
-
-// 签名交易
-        $ec = new EC('secp256k1');
-        $keccak = new Keccak(256);
-        $hash = $keccak->hash(hex2bin($transaction['data']), 256);
-        $privateKey = str_pad($privateKey, 64, '0', STR_PAD_LEFT);
-        $signature = $ec->sign($hash, $privateKey, 'hex', ['canonical' => true]);
-        $r = $signature->r->toString('hex');
-        $s = $signature->s->toString('hex');
-        $v = $signature->recoveryParam + 27;
-        $signedTransaction = $web3->eth->accounts->signTransaction($transaction, $privateKey, $v, $r, $s);
-
-// 发送签名的交易
-        $web3->eth->sendRawTransaction($signedTransaction, function ($err, $tx) {
+        $web3->eth->getTransactionCount($from, 'pending', function ($err, $nonce) use ($web3, $from, $to, $usdtContractAddress, $transactionData, $privateKey) {
             if ($err !== null) {
                 echo 'Error: ' . $err->getMessage();
                 return;
             }
-            echo 'Transaction Hash: ' . $tx;
+            echo '1';
+            // 创建交易对象
+            $transaction = [
+                'nonce' => '0x' . dechex($nonce),
+                'from' => $from,
+                'to' => $usdtContractAddress,
+                'value' => '0x0',
+                'gas' => '0x5208', // gas 限制
+                'gasPrice' => '0x4a817c800', // gas 价格
+                'data' => $transactionData,
+            ];
+            echo '发送';
+            var_dump($transaction);
+
+            // 签名交易
+            $ec = new EC('secp256k1');
+            $keccak = new Keccak(256);
+            $hash = $keccak->hash(hex2bin($transaction['data']), 256);
+            $privateKey = str_pad($privateKey, 64, '0', STR_PAD_LEFT);
+            $signature = $ec->sign($hash, $privateKey, 'hex', ['canonical' => true]);
+            $r = $signature->r->toString('hex');
+            $s = $signature->s->toString('hex');
+            $v = $signature->recoveryParam + 27;
+            var_dump(54545);
+            // 使用 PHP Web3 库签名交易
+            $web3->eth->accounts->signTransaction($transaction, $privateKey, function ($err, $signedTx) use ($web3) {
+                if ($err !== null) {
+                    echo 'Error: ' . $err->getMessage();
+                    return;
+                }
+                echo '签名交易';
+
+                // 发送签名的交易
+                $web3->eth->sendRawTransaction($signedTx, function ($err, $tx) {
+                    if ($err !== null) {
+                        echo 'Error: ' . $err->getMessage();
+                        return;
+                    }
+                    echo '交易完成';
+                    echo 'Transaction Hash: ' . $tx;
+                });
+            });
         });
 
-
+        exit();
 
 
 
