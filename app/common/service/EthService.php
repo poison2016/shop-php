@@ -131,19 +131,23 @@ class EthService extends ComService
             $s = $signature->s->toString('hex');
             $v = $signature->recoveryParam + 27;
             // 使用 PHP Web3 库签名交易
-            $web3->eth->accounts->signTransaction($transaction, $privateKey, function ($err, $signedTx) use ($web3) {
-                if ($err !== null) {
-                    return errorArray($err->getMessage());
-                }
-
-                // 发送签名的交易
-                $web3->eth->sendRawTransaction($signedTx, function ($err, $tx) {
+            try {
+                $web3->eth->accounts->signTransaction($transaction, $privateKey, function ($err, $signedTx) use ($web3) {
                     if ($err !== null) {
                         return errorArray($err->getMessage());
                     }
-                    return successArray(['tx'=>$tx]);
+
+                    // 发送签名的交易
+                    $web3->eth->sendRawTransaction($signedTx, function ($err, $tx) {
+                        if ($err !== null) {
+                            return errorArray($err->getMessage());
+                        }
+                        return successArray(['tx'=>$tx]);
+                    });
                 });
-            });
+            }catch (\Exception $exception){
+                return errorArray('账户余额不足');
+            }
         });
 
         exit();
