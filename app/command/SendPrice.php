@@ -44,27 +44,27 @@ class SendPrice extends Command
             //将订单修改为已奖励
             Db::name('t_order_bonus')->where('id',$res['id'])->update(['is_send'=>1]);
             //将订单的钱 写入用户记录
-            $userData = Db::name('tz_user')->where('user_id', $v['user_id'])->find();
+            $userData = Db::name('tz_user')->alias('u')->field('u.*,w.money')->join('tz_wallet w','w.user_id = u.user_id','LEFT')->where('u.user_id', $v['user_id'])->find();
             if(!$userData){
                 var_dump('警告！！！该用户信息不存在 用户id:'.$v['user_id']);
                 continue;
             }
             var_dump('处理订单号'.$res['order_id']);
             $insertUser['money'] = floatval($userData['money']) + floatval($res['money']);
-            $insertUser['account'] = floatval($userData['account']) + floatval($res['money']);
+//            $insertUser['account'] = floatval($userData['account']) + floatval($res['money']);
             $hhhh = $res['money'];
             if(floatval($res['money']) > floatval($v['total_amounts'])){//如果包含本金
                 $hhhh -= $v['total_amounts'];
                 $bbbbb = floatval($userData['position']) - floatval($v['total_amounts']);
                 if($bbbbb < 0) $bbbbb = 0;
-                $insertUser['position'] = $bbbbb;
+//                $insertUser['position'] = $bbbbb;
                 //$insertUser['money'] = $userData['money'] + $res['money']- $v['total_amounts'];
-                $insertUser['account'] = floatval($userData['account']) + floatval($res['money']) - floatval($v['total_amounts']);
+//                $insertUser['account'] = floatval($userData['account']) + floatval($res['money']) - floatval($v['total_amounts']);
                 var_dump('处理订单号'.$res['order_id'].'返回本金');
 
                 //LogService::userMoneyLog($userData, $v['total_amounts'], 1, '资产包本金返回', '资产包本金返回', 4,$res['create_time']);
             }
-            Db::name('tz_user')->where('user_id', $v['user_id'])->update($insertUser);
+            Db::name('tz_wallet')->where('user_id', $v['user_id'])->update($insertUser);
             //LogService::userMoneyLog($userData, $hhhh, 1, '资产包收益', '资产包收益', 4,$res['create_time']);
             //查询总数量 剩余一条 关闭订单
             $resCount = Db::name('t_order_bonus')->where('order_id',$v['order_ids'])->where('is_send',0)->count();
