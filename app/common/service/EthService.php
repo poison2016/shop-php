@@ -103,10 +103,10 @@ class EthService extends ComService
             echo '1';
             // 创建交易对象
             // 确保 nonce 是整数
-            if ($nonce instanceof BigInteger) {
-                $nonce = hexdec($nonce->toString()); // 转换为十进制整数
-            }
-            var_dump($nonce);exit();
+//            if ($nonce instanceof BigInteger) {
+//                $nonce = hexdec($nonce->toString()); // 转换为十进制整数
+//            }
+            var_dump($nonce->value);exit();
             $transaction = [
                 'nonce' => '0x' . dechex((int)$nonce),
                 'from' => $from,
