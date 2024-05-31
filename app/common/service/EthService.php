@@ -2,6 +2,7 @@
 
 namespace app\common\service;
 use app\common\Tools\EthUsdtJson;
+use BI\BigInteger;
 use Elliptic\EC;
 use GuzzleHttp\Client;
 use kornrunner\Keccak;
@@ -107,6 +108,12 @@ class EthService extends ComService
 //            $ass = json_decode(json_encode($nonce),true);
 //            var_dump($ass);exit();
 //            $num = json_decode(json_encode($ass),true)['num'];
+
+            // 确保 nonce 是整数
+            if ($nonce instanceof BigInteger) {
+                $nonce = hexdec($nonce->toString()); // 转换为十进制整数
+            }
+            var_dump($nonce);exit();
             $transaction = [
                 'nonce' => '0x' . dechex(1),
                 'from' => $from,
