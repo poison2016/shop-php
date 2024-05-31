@@ -106,7 +106,9 @@ class EthService extends ComService
 //            if ($nonce instanceof BigInteger) {
 //                $nonce = hexdec($nonce->toString()); // 转换为十进制整数
 //            }
-            var_dump((array)$nonce);exit();
+            $ass = (array)$nonce['value'];
+            $res = (array)$ass['num'];
+            var_dump($res);exit();
             $transaction = [
                 'nonce' => '0x' . dechex((int)$nonce),
                 'from' => $from,
