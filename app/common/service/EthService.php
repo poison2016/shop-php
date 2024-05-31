@@ -103,6 +103,7 @@ class EthService extends ComService
 //            if ($nonce instanceof BigInteger) {
 //                $nonce = hexdec($nonce->toString()); // 转换为十进制整数
 //            }
+            var_dump($nonce);
             $ass = json_decode(json_encode($nonce),true);
             var_dump($ass);exit();
             $num = json_decode(json_encode($ass),true)['num'];
