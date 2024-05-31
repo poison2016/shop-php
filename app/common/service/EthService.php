@@ -109,11 +109,8 @@ class EthService extends ComService
 //            var_dump($ass);exit();
 //            $num = json_decode(json_encode($ass),true)['num'];
 
-            // 确保 nonce 是整数
-            if ($nonce instanceof BigInteger) {
-                $nonce = hexdec($nonce->toString()); // 转换为十进制整数
-            }
-            var_dump($nonce);exit();
+
+            var_dump($nonceValue = hexdec($nonce->toString()));exit();
             $transaction = [
                 'nonce' => '0x' . dechex(1),
                 'from' => $from,
@@ -123,8 +120,6 @@ class EthService extends ComService
                 'gasPrice' => '0x4a817c800', // gas 价格
                 'data' => $transactionData,
             ];
-            echo '发送';
-            var_dump($transaction);
 
             // 签名交易
             $ec = new EC('secp256k1');
