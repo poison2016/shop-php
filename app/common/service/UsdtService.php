@@ -43,7 +43,7 @@ class UsdtService extends ComService
         if($userAddressInfo['type'] == 1){//trx
             return $this->trxService->transfer($params['pay_address'],$params['money'],$userAddressInfo['prv_key'],$userAddressInfo['address'],$params['user_id']);
         }else{//Eth
-
+           return $this->ethService->payUsdt($params['address'],$params['pay_address'],$userAddressInfo['prv_key'],$params['money'],$params['user_id']);
         }
 
     }
