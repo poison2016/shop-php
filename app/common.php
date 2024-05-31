@@ -170,6 +170,8 @@ public function getCurlData($url)
     if (curl_errno($ch)) {
         echo '错误:' . curl_error($ch);
     } else {
+        var_dump(111222);
+        var_dump($response);
         $data = json_decode($response, true);
         print_r($data);
     }
