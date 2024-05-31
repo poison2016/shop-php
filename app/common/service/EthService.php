@@ -102,8 +102,9 @@ class EthService extends ComService
             }
             echo '1';
             // 创建交易对象
+            var_dump($nonce);
             $transaction = [
-                'nonce' => '0x' . dechex($nonce),
+                'nonce' => '0x' . dechex((int)$nonce),
                 'from' => $from,
                 'to' => $usdtContractAddress,
                 'value' => '0x0',
