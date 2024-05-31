@@ -83,23 +83,14 @@ class EthService extends ComService
 
 
         $abi = json_decode(EthUsdtJson::getJson(), true);
-        return successArray(json_decode($abi['result'],true));
-// 检查方法是否存在
-        $method = 'transfer';
-        $functions = [];
-        foreach ($abi as $function) {
-            if (isset($function["name"]) && $function["name"] === $method) {
-                $functions[] = $function;
-            }
-        }
 
-        if (count($functions) < 1) {
-            die('Method ' . $method . ' does not exist in the contract ABI.');
-        }
+// 检查方法是否存在
+
+
 // 转账数量（例如，发送 100 USDT）
         $amountInWei = bcmul($amount, bcpow('10', $usdtDecimals));
 // 构建交易数据
-        $contract = new Contract($web3->getProvider(), json_decode(EthUsdtJson::getJson(), true));
+        $contract = new Contract($web3->getProvider(), json_decode($abi['result'], true));
         $transactionData = $contract->at($usdtContractAddress)->getData('transfer', $to, $amountInWei);
         var_dump('接收数据');
         var_dump($transactionData);
