@@ -94,6 +94,7 @@ class EthService extends ComService
         $contract = new Contract($web3->getProvider(), json_decode($abi['result'], true));
         $transactionData = $contract->at($usdtContractAddress)->getData('transfer', $to, $amountInWei);
 // 获取账户 nonce
+        try {
         $web3->eth->getTransactionCount($from, 'pending', function ($err, $nonce) use ($web3, $from, $to, $usdtContractAddress, $transactionData, $privateKey) {
             if ($err !== null) {
                 echo 'Error: ' . $err->getMessage();
@@ -131,7 +132,7 @@ class EthService extends ComService
             $s = $signature->s->toString('hex');
             $v = $signature->recoveryParam + 27;
             // 使用 PHP Web3 库签名交易
-            try {
+
                 $web3->eth->accounts->signTransaction($transaction, $privateKey, function ($err, $signedTx) use ($web3) {
                     if ($err !== null) {
                         return errorArray($err->getMessage());
@@ -144,13 +145,15 @@ class EthService extends ComService
                         }
                         return successArray(['tx'=>$tx]);
                     });
+                    return successArray('交易中');
                 });
-            }catch (\Error $exception){
-                return errorArray('账户余额不足');
-            }
-        });
 
-        exit();
+        });
+        return successArray('交易中');
+        }catch (\Error $exception){
+            return errorArray('账户余额不足');
+        }
+
 
 
 
