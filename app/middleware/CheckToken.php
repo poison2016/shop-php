@@ -23,7 +23,7 @@ class CheckToken
         $token = $request->header('api-token', '');
         if ($token == '' && $userToken == '') {
             $data = [
-                'code' => 101,
+                'code' => 403,
                 'msg' => 'token不能为空'
             ];
             return Response::create($data, 'json');
