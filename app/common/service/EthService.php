@@ -145,7 +145,7 @@ class EthService extends ComService
                         return successArray(['tx'=>$tx]);
                     });
                 });
-            }catch (\Exception $exception){
+            }catch (\Error $exception){
                 return errorArray('账户余额不足');
             }
         });
