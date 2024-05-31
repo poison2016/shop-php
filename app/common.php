@@ -169,7 +169,6 @@ function getCurlData($url)
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // 跟随重定向
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 跳过 SSL 证书验证
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
     $response = curl_exec($ch);
     curl_close($ch);
     if ($response === false) {
@@ -177,6 +176,7 @@ function getCurlData($url)
         $errorMessage = curl_error($ch);
         trace('cURL 错误代码: ' . $errorCode . ' 错误信息: ' . $errorMessage,'error');
     } else {
+        var_dump(11111);
         $data = json_decode($response, true);
         return $data;
 

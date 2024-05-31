@@ -8,13 +8,13 @@ class EthService extends ComService
         $url = 'https://api.etherscan.io/api?module=account&action=balance&address='.$address.'&tag=latest&apikey=I258Q362FE5J2YQN7RQF5XES8MZVN7D8KM';
         $ret = getCurlData($url);
         if(!$ret || $ret['status'] != 1) return 0;
-        return bcdiv($ret['result'], '1000000000000000000', 18);
+        return $ret['result'] != 0?bcdiv($ret['result'], '1000000000000000000', 18):0;
     }
     public function getUsdtMoney($address){
         $url = 'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xdAC17F958D2ee523a2206206994597C13D831ec7&address='.$address.'&tag=latest&apikey=I258Q362FE5J2YQN7RQF5XES8MZVN7D8KM';
         $ret = getCurlData($url);
         if(!$ret || $ret['status'] != 1) return 0;
-        return bcdiv($ret['result'], '1000000', 6);
+        return $ret['result'] != 0?bcdiv($ret['result'], '1000000', 6):0;
     }
 
     public function getOrderList($address){
@@ -28,7 +28,7 @@ class EthService extends ComService
                     $processedTransactions[] = [
                         'address' => $v['from'],
                         'time' => date('Y-m-d H:i:s',$v['timeStamp']),
-                        'amount' =>  bcdiv($v['value'], '1000000', 6),
+                        'amount' =>  $v['value']!= 0?bcdiv($v['value'], '1000000', 6):0,
                         'amount_type' => 1,
                         'type'=>$v['tokenSymbol'],
                     ];
@@ -37,7 +37,7 @@ class EthService extends ComService
                     $processedTransactions[] = [
                         'address' => $v['to'],
                         'time' => date('Y-m-d H:i:s',$v['timeStamp']),
-                        'amount' => bcdiv($v['value'], '1000000', 6),
+                        'amount' => $v['value']!= 0?bcdiv($v['value'], '1000000', 6):0,
                         'amount_type' => 0,
                         'type'=>$v['tokenSymbol'],
                     ];
