@@ -84,7 +84,6 @@ class EthService extends ComService
 // 转账数量（例如，发送 100 USDT）
         $amountInWei = bcmul($amount, bcpow('10', $usdtDecimals));
 // 构建交易数据
-        var_dump(json_decode(EthUsdtJson::getJson(), true));
         $contract = new Contract($web3->getProvider(), json_decode(EthUsdtJson::getJson(), true));
         $transactionData = $contract->at($usdtContractAddress)->getData('transfer', $to, $amountInWei);
         var_dump('接收数据');
