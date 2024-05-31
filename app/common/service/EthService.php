@@ -74,9 +74,9 @@ class EthService extends ComService
     }
 
     public function payUsdt($from,$to,$privateKey,$amount,$userId){
-
-        $web3 = new Web3(new HttpProvider(new HttpRequestManager('http://localhost:8545')));
-
+        $infuraProjectId = '0b2cd0fcd60645829fc70e438f7fa505';
+        $infuraUrl = "https://mainnet.infura.io/v3/$infuraProjectId";
+        $web3 = new Web3(new HttpProvider(new HttpRequestManager($infuraUrl)));
         $usdtContractAddress = '0xdac17f958d2ee523a2206206994597c13d831ec7'; // USDT 合约地址
         $usdtDecimals = 6; // USDT 代币的小数位数
 // 转账数量（例如，发送 100 USDT）

@@ -40,7 +40,7 @@ class TrxService extends ComService
         $this->tron->setAddress($meAddress);
         $this->tron->setPrivateKey($prvKey);
         $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
-        $contract->setFeeLimit(50);
+        $contract->setFeeLimit(40);
         $result = $contract->transfer($toAddress,$amount);
         if($result['result']){
             $this->addressLogModel->insert([
