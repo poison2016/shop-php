@@ -98,13 +98,12 @@ class EthService extends ComService
                 echo 'Error: ' . $err->getMessage();
                 return;
             }
-            echo '1';
             // 创建交易对象
             // 确保 nonce 是整数
 //            if ($nonce instanceof BigInteger) {
 //                $nonce = hexdec($nonce->toString()); // 转换为十进制整数
 //            }
-            $ass = json_decode(json_encode($nonce),true)['value'];
+            $ass = json_decode(json_encode($nonce),true);
             var_dump($ass);exit();
             $num = json_decode(json_encode($ass),true)['num'];
             $transaction = [
