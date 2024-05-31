@@ -84,7 +84,6 @@ class UsdtService extends ComService
     }
 
     public function  test(string $address){
-        var_dump(123123123);exit();
         //$ret = $this->trxService->transfer('TF7hR99wuqwHWW6cPQG5kF66qb6RSTVowi',1,'8589e0113e5a9d6e5e73d6368bbb8014046d697c2d425cb408e90c5ee4e9016d','TX6Fvj7vzpMeftE725yUqjQdGnAC5XkUcc');
         $ret = $this->ethService->payUsdt('0x746092d881A40E3306461326B5cE0ccc64bA9696','0x735Fd33BF0dbaB1f9C5d8eC5E43e14cf71556D91','a2013732cdb28703aa518708500e128f468ef8a4d41e0e586cd3f2393794e4d9',1);
         return $ret;
