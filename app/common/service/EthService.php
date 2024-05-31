@@ -83,7 +83,7 @@ class EthService extends ComService
 
 
         $abi = json_decode(EthUsdtJson::getJson(), true);
-        var_dump($abi);exit();
+        return successArray($abi);
 // 检查方法是否存在
         $method = 'transfer';
         $functions = [];
