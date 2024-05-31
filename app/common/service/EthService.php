@@ -130,23 +130,18 @@ class EthService extends ComService
             $r = $signature->r->toString('hex');
             $s = $signature->s->toString('hex');
             $v = $signature->recoveryParam + 27;
-            var_dump(54545);
             // 使用 PHP Web3 库签名交易
             $web3->eth->accounts->signTransaction($transaction, $privateKey, function ($err, $signedTx) use ($web3) {
                 if ($err !== null) {
-                    echo 'Error: ' . $err->getMessage();
-                    return;
+                    return errorArray($err->getMessage());
                 }
-                echo '签名交易';
 
                 // 发送签名的交易
                 $web3->eth->sendRawTransaction($signedTx, function ($err, $tx) {
                     if ($err !== null) {
-                        echo 'Error: ' . $err->getMessage();
-                        return;
+                        return errorArray($err->getMessage());
                     }
-                    echo '交易完成';
-                    echo 'Transaction Hash: ' . $tx;
+                    return successArray(['tx'=>$tx]);
                 });
             });
         });
