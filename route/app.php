@@ -51,11 +51,11 @@ Route::group('apis/order', function () {
 })->prefix('apis/order/')->middleware('\app\middleware\CheckToken');;
 Route::group('apis/usdt', function () {
     Route::any('test', 'test')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
-    Route::any('userWalletList', 'userWalletList')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
-    Route::any('walletPay', 'walletPay')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
-    Route::any('transactionList', 'transactionList')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
-    Route::any('getAddressInfo', 'getAddressInfo')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
-    Route::any('saveAddress', 'saveAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+    Route::any('userWalletList', 'userWalletList')->middleware('\app\middleware\CheckToken')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+    Route::any('walletPay', 'walletPay')->middleware('\app\middleware\CheckToken')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+    Route::any('transactionList', 'transactionList')->middleware('\app\middleware\CheckToken')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+    Route::any('getAddressInfo', 'getAddressInfo')->middleware('\app\middleware\CheckToken')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+    Route::any('saveAddress', 'saveAddress')->middleware('\app\middleware\CheckToken')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
 })->prefix('apis/usdt/');;
 
 Route::group('apis/user', function () {
