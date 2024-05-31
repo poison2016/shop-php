@@ -48,7 +48,7 @@ Route::group('apis/order', function () {
     Route::any('list', 'list');
     Route::any('info', 'info')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
 
-})->prefix('apis/order/');
+})->prefix('apis/order/')->middleware('\app\middleware\CheckToken');;
 Route::group('apis/usdt', function () {
     Route::any('test', 'test')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
     Route::any('userWalletList', 'userWalletList')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
@@ -56,16 +56,16 @@ Route::group('apis/usdt', function () {
     Route::any('transactionList', 'transactionList')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
     Route::any('getAddressInfo', 'getAddressInfo')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
     Route::any('saveAddress', 'saveAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
-})->prefix('apis/usdt/');
+})->prefix('apis/usdt/')->middleware('\app\middleware\CheckToken');;
 
 Route::group('apis/user', function () {
-    Route::any('createAddress', 'createAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
-    Route::any('importAddress', 'importAddress')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
+    Route::any('createAddress', 'createAddress')->middleware('\app\middleware\Throttle')->middleware('\app\middleware\CheckToken');;//限制1秒只能请求一次
+    Route::any('importAddress', 'importAddress')->middleware('\app\middleware\Throttle')->middleware('\app\middleware\CheckToken');;//限制1秒只能请求一次;
     Route::any('login', 'login')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次;
-    Route::any('addressList', 'addressList');
-    Route::any('getAddressInfo', 'getAddressInfo');//限制1秒只能请求一次
-    Route::any('setMoney', 'setMoney');//限制1秒只能请求一次
-    Route::any('getUserInfo', 'getUserInfo');//限制1秒只能请求一次
+    Route::any('addressList', 'addressList')->middleware('\app\middleware\CheckToken');;
+    Route::any('getAddressInfo', 'getAddressInfo')->middleware('\app\middleware\CheckToken');;//限制1秒只能请求一次
+    Route::any('setMoney', 'setMoney')->middleware('\app\middleware\CheckToken');;//限制1秒只能请求一次
+    Route::any('getUserInfo', 'getUserInfo')->middleware('\app\middleware\CheckToken');;//限制1秒只能请求一次
 })->prefix('apis/user/');
 
 Route::group(function () {
