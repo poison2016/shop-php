@@ -17,6 +17,7 @@ class SendPrice extends Command
 
     protected function configure()
     {
+        ini_set('memory_limit', '2048M');
         // 指令配置
         $this->setName('send_price')
             ->setDescription('the sendprice command');
