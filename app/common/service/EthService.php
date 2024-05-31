@@ -11,6 +11,7 @@ class EthService extends ComService
        &address='.$address.'
        &tag=latest
        &apikey=I258Q362FE5J2YQN7RQF5XES8MZVN7D8KM';
+        var_dump(454654658);
         $ret = getCurlData($url);
         var_dump($ret);exit();
         if(!$ret) return 0;
