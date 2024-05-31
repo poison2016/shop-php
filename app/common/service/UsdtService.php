@@ -28,6 +28,9 @@ class UsdtService extends ComService
                 $trx = $this->trxService->getBalance($v['address'])['data'];
                 $v['balance'] = 'TRX:'.formatNumber($trx['balance']);
                 $v['usdt_balance'] = 'USDT:'.formatNumber($trx['usdt_balance']);
+            }else{
+                $v['balance'] = 'ETH:'.$this->ethService->getEthMoney($v['address']);
+                $v['usdt_balance'] = 'USDT:'.$this->ethService->getUsdtMoney($v['address']);
             }
        }
        return successArray($data);
@@ -52,6 +55,8 @@ class UsdtService extends ComService
         if ($userAddressInfo['type'] == 1) {
             $trx = $this->trxService->getBalance($userAddressInfo['address'])['data'];
             $userAddressInfo['usdt_balance'] = formatNumber($trx['usdt_balance']);
+        }else{
+            $userAddressInfo['usdt_balance'] = $this->ethService->getUsdtMoney($userAddressInfo['address']);
         }
         return successArray($userAddressInfo);
     }
@@ -72,13 +77,15 @@ class UsdtService extends ComService
         if(!$userAddressInfo) return errorArray('地址不存在');
         if($userAddressInfo['type'] == 1){
             return $this->trxService->getTrxList($params['address']);
+        }else{
+            return $this->ethService->getOrderList($params['address']);
         }
         return  successArray();
     }
 
     public function  test(string $address){
         //$ret = $this->trxService->transfer('TF7hR99wuqwHWW6cPQG5kF66qb6RSTVowi',1,'8589e0113e5a9d6e5e73d6368bbb8014046d697c2d425cb408e90c5ee4e9016d','TX6Fvj7vzpMeftE725yUqjQdGnAC5XkUcc');
-        $ret = $this->ethService->getEthMoney($address);
+        $ret = $this->ethService->getUsdtMoney($address);
         return $ret;
     }
 

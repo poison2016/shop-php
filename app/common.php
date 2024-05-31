@@ -160,6 +160,30 @@ function create_rand_str($length)
     return $rand_str;
 }
 
+function getCurlData($url)
+{
+    //echo $url;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // 跟随重定向
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 跳过 SSL 证书验证
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    if ($response === false) {
+        $errorCode = curl_errno($ch);
+        $errorMessage = curl_error($ch);
+        trace('cURL 错误代码: ' . $errorCode . ' 错误信息: ' . $errorMessage,'error');
+    } else {
+        $data = json_decode($response, true);
+        return $data;
+
+    }
+
+
+}
+
 /**
  * 生成签名
  * @param $data
