@@ -107,6 +107,7 @@ class EthService extends ComService
 //                $nonce = hexdec($nonce->toString()); // 转换为十进制整数
 //            }
             $ass = json_decode(json_encode($nonce),true)['value'];
+            var_dump(ass);exit();
             $num = json_decode(json_encode($ass),true)['num'];
             $transaction = [
                 'nonce' => '0x' . dechex((int)$num),
