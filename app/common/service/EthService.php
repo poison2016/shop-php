@@ -110,9 +110,9 @@ class EthService extends ComService
 //            $num = json_decode(json_encode($ass),true)['num'];
 
 
-            var_dump($nonceValue = hexdec($nonce->toString()));exit();
+            $nonceValue = hexdec($nonce->toString());
             $transaction = [
-                'nonce' => '0x' . dechex(1),
+                'nonce' => '0x' . dechex($nonceValue),
                 'from' => $from,
                 'to' => $usdtContractAddress,
                 'value' => '0x0',
