@@ -12,6 +12,7 @@ class EthService extends ComService
        &tag=latest
        &apikey=I258Q362FE5J2YQN7RQF5XES8MZVN7D8KM';
         $ret = curl_http($url);
+        var_dump($ret);
         if(!$ret) return 0;
         $res = json_decode($ret,true);
         var_dump($ret);
