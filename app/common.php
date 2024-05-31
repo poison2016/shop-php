@@ -164,17 +164,25 @@ function getCurlData($url)
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $response = curl_exec($ch);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // 跟随重定向
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 跳过 SSL 证书验证
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
-    if (curl_errno($ch)) {
-        echo '错误:' . curl_error($ch);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    if ($response === false) {
+        $errorCode = curl_errno($ch);
+        $errorMessage = curl_error($ch);
+        echo 'cURL 错误代码: ' . $errorCode . ' 错误信息: ' . $errorMessage;
     } else {
         $data = json_decode($response, true);
         print_r($data);
+        return $data;
+
     }
 
-    curl_close($ch);
+
 }
 
 /**
