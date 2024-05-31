@@ -101,6 +101,7 @@ class EthService extends ComService
                 return;
             }
             echo '1';
+            var_dump($nonce);exit();
             // 创建交易对象
             $transaction = [
                 'nonce' => '0x' . dechex($nonce),
