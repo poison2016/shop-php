@@ -81,6 +81,21 @@ class EthService extends ComService
         $usdtContractAddress = '0xdac17f958d2ee523a2206206994597c13d831ec7'; // USDT 合约地址
         $usdtDecimals = 6; // USDT 代币的小数位数
 
+
+        $abi = json_decode(file_get_contents(EthUsdtJson::getJson()), true);
+        var_dump($abi);exit();
+// 检查方法是否存在
+        $method = 'transfer';
+        $functions = [];
+        foreach ($abi as $function) {
+            if (isset($function["name"]) && $function["name"] === $method) {
+                $functions[] = $function;
+            }
+        }
+
+        if (count($functions) < 1) {
+            die('Method ' . $method . ' does not exist in the contract ABI.');
+        }
 // 转账数量（例如，发送 100 USDT）
         $amountInWei = bcmul($amount, bcpow('10', $usdtDecimals));
 // 构建交易数据
