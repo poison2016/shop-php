@@ -162,6 +162,7 @@ function create_rand_str($length)
 
 function getCurlData($url)
 {
+    echo $url;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
