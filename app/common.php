@@ -175,10 +175,9 @@ function getCurlData($url)
     if ($response === false) {
         $errorCode = curl_errno($ch);
         $errorMessage = curl_error($ch);
-        echo 'cURL 错误代码: ' . $errorCode . ' 错误信息: ' . $errorMessage;
+        trace('cURL 错误代码: ' . $errorCode . ' 错误信息: ' . $errorMessage,'error');
     } else {
         $data = json_decode($response, true);
-        print_r($data);
         return $data;
 
     }
