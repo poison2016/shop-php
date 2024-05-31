@@ -82,7 +82,7 @@ class EthService extends ComService
         $usdtDecimals = 6; // USDT 代币的小数位数
 
 
-        $abi = json_decode(file_get_contents(EthUsdtJson::getJson()), true);
+        $abi = json_decode(EthUsdtJson::getJson(), true);
         var_dump($abi);exit();
 // 检查方法是否存在
         $method = 'transfer';
