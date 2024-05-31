@@ -162,18 +162,19 @@ function create_rand_str($length)
 
 public function getCurlData($url)
 {
-    $curl = curl_init();
-    //设置抓取的url
-    curl_setopt($curl, CURLOPT_URL, $url);
-    //设置获取的信息以文件流的形式返回，而不是直接输出。
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //不验证证书
-    //执行命令
-    $data = curl_exec($curl);
-    //关闭URL请求
-    curl_close($curl);
-    //显示获得的数据
-    return $data;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        echo '错误:' . curl_error($ch);
+    } else {
+        $data = json_decode($response, true);
+        print_r($data);
+    }
+
+    curl_close($ch);
 }
 
 /**
