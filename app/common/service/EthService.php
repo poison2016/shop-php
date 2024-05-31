@@ -14,6 +14,7 @@ class EthService extends ComService
         $ret = curl_http($url);
         if(!$ret) return 0;
         $res = json_decode($ret,true);
+        var_dump($ret);
         return $res['result'];
     }
     public function getUsdtMoney($address){
