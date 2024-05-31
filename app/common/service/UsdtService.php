@@ -56,6 +56,17 @@ class UsdtService extends ComService
         return successArray($userAddressInfo);
     }
 
+    public function saveAddress($params){
+        $params['create_time'] = time();
+        $params['password'] = md5Password($params['pay_password']);
+        unset($params['pay_password']);
+        $res = $this->userAddressModel->where('address',$params['address'])->find();
+        if($res) return errorArray('该地址已添加');
+        $ret = $this->userAddressModel->insert($params);
+        if(!$ret) return errorArray('提交失败');
+        return successArray();
+    }
+
     public function getList($params){
         $userAddressInfo = $this->userAddressModel->where(['address'=>$params['address'],'user_id'=>$params['user_id']])->find();
         if(!$userAddressInfo) return errorArray('地址不存在');

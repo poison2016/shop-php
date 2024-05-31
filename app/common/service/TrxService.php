@@ -84,7 +84,8 @@ class TrxService extends ComService
                     $processedTransactions[] = [
                         'address' => $raddress,
                         'time' => $timestamp,
-                        'amount' => '+' . $amount,
+                        'amount' =>  $amount,
+                        'amount_type' => 1,
                         'type'=>$name,
                     ];
                 } elseif ($raddress == $address) {
@@ -92,7 +93,8 @@ class TrxService extends ComService
                     $processedTransactions[] = [
                         'address' => $toAddress,
                         'time' => $timestamp,
-                        'amount' => '-' . $amount,
+                        'amount' => $amount,
+                        'amount_type' => 0,
                         'type'=>$name,
                     ];
                 }
