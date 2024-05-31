@@ -27,12 +27,14 @@ class Usdt extends BaseController
     {
         $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
         $params['address'] = input('address','');
+        $params['pay_address'] = input('pay_address','');
         $params['money'] = input('money','');
         $params['pay_password'] = input('pay_password','');
         $rule = [
             'address' => ['must', '', '地址不能为空'],
             'money' => ['must', '', '金额不能为空'],
             'pay_password' => ['must', '', '钱包密码不能为空'],
+            'pay_address' => ['must', '', '收款钱包不能为空'],
         ];
         FilterValid::filterData($params, $rule);
         return $this->requestData($this->usdtService->SendMoney($params));
