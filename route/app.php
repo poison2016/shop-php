@@ -56,6 +56,7 @@ Route::group('apis/usdt', function () {
     Route::any('transactionList', 'transactionList')->middleware('\app\middleware\CheckToken')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
     Route::any('getAddressInfo', 'getAddressInfo')->middleware('\app\middleware\CheckToken')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
     Route::any('saveAddress', 'saveAddress')->middleware('\app\middleware\CheckToken')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+    Route::any('getAdminList', 'getAdminList')->middleware('\app\middleware\CheckToken')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
 })->prefix('apis/usdt/');;
 
 Route::group('apis/user', function () {

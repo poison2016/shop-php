@@ -82,4 +82,8 @@ class Usdt extends BaseController
         return $this->requestData($this->usdtService->test(input('address')));
     }
 
+    public function getAdminList(){
+        return $this->requestData($this->usdtService->getAdminList(input('type')));
+    }
+
 }
