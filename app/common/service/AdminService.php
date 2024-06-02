@@ -86,7 +86,7 @@ class AdminService extends ComService
     }
 
     public function orderList(){
-        $data =  $this->orderModel->alias('o')->field('o.*,g.contract_name,g.img,g.yield,g.revenue_type')
+        $data =  $this->orderModel->alias('o')->field('o.*,g.contract_name,g.img,g.yield,g.revenue_type,u.user_name')
             ->join('t_goods g','g.id = o.contract_id','LEFT')
             ->join('tz_user u','u.user_id = o.user_id','LEFT')
             ->paginate(tp_page(15));
