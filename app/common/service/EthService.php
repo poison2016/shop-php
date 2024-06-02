@@ -6,6 +6,7 @@ use BI\BigInteger;
 use Elliptic\EC;
 use GuzzleHttp\Client;
 use kornrunner\Keccak;
+use think\facade\Db;
 use Web3\Web3;
 use Web3\Contract;
 use Web3\Providers\HttpProvider;
@@ -143,6 +144,13 @@ class EthService extends ComService
                         if ($err !== null) {
                             return errorArray($err->getMessage());
                         }
+                        Db::name('')->insert([
+                            'user_id'=> $userId,
+                            'address'=>$meAddress,
+                            'txid'=>$result['txid'],
+                            'money'=>$amount,
+                            'create_time'=>time()
+                        ]);
                         return successArray(['tx'=>$tx]);
                     });
                     return successArray('交易中');
