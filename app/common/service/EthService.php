@@ -92,7 +92,7 @@ class EthService extends ComService
             "data" => '0x',
         ];
         // 设定Gas，nonce，gasprice
-        $trans['gas'] = dechex(hexdec($client->eth_estimateGas($trans)) * 1.5);
+        $trans['gas'] = dechex(hexdec($client->eth_estimateGas($trans)) * 1.0);
         $trans['gasPrice'] = $client->eth_gasPrice();
         $trans['nonce'] = $client->eth_getTransactionCount('0xdac17f958d2ee523a2206206994597c13d831ec7', 'pending');
         // 3. 发送您的交易
