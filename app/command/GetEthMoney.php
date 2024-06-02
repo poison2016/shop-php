@@ -44,6 +44,7 @@ class GetEthMoney extends Command
             if($ret['status'] == 1){
                 foreach ($ret['result'] as $v){
                     if(strtolower($v['to']) == strtolower($item['address'])){
+                        var_dump($v['hash']);
                         $ret = Db::name('tz_user_address_log')->where(['address'=>$v['from'],'txid'=>$v['hash']])->find();
                         if(!$ret) continue;
                         if($ret['is_ok'] == 1){
