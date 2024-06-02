@@ -51,7 +51,8 @@ class GetEthMoney extends Command
                         }
                         $money = $v['value']!= 0?bcdiv($v['value'], '1000000', 6):0;
                         Db::name('tz_user_address_log')->where('id',$ret['id'])->update(['is_ok'=>1,'money'=>(double)$money]);
-                        Db::name('tz_wallet')->where('user_id',$ret['user_id'])->inc('money',(double)$money)->update();
+                        $wallet = Db::name('tz_wallet')->where('user_id',$ret['user_id'])->find();
+                        Db::name('tz_wallet')->where('user_id',$ret['user_id'])->update(['money'=>$wallet['money']+$money]);
                     }
                 }
             }
