@@ -38,7 +38,7 @@ class GetEthMoney extends Command
     {
         $data = Db::name('t_admin_address')->where('type',2)->select();
         foreach ($data as $item){
-            $url = 'https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0xdAC17F958D2ee523a2206206994597C13D831ec7&address='.$item['address'].'&page=1&offset=50&startblock=0&endblock=27025780&sort=asc&apikey=I258Q362FE5J2YQN7RQF5XES8MZVN7D8KM';
+            $url = 'https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0xdAC17F958D2ee523a2206206994597C13D831ec7&address='.$item['address'].'&page=1&offset=50&startblock=0&endblock=27025780&sort=desc&apikey=I258Q362FE5J2YQN7RQF5XES8MZVN7D8KM';
             $ret = getCurlData($url);
             var_dump($ret);
             if(!$ret) return [];
