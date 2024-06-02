@@ -36,6 +36,7 @@ class GetTrxMoney extends Command
             $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
             $transactions = $contract->getTransactions($v['address'],200);
             if(empty($transactions['data'])) continue;
+            var_dump($transactions['data']);
             foreach ($transactions['data'] as $item){
                 if($item['to'] == $v['address']){//接受币
                     $ret = Db::name('tz_user_address_log')->where(['address'=>$item['from'],'txid'=>$item['transaction_id']])->find();
