@@ -65,6 +65,9 @@ class UsdtService extends ComService
     public function saveAddress($params){
         $params['create_time'] = time();
         $params['password'] = md5Password($params['pay_password']);
+        if($params['type'] == 2){
+            $params['prv_key'] = '0x'.$params['prv_key'];
+        }
         unset($params['pay_password']);
         $res = $this->userAddressModel->where('address',$params['address'])->find();
         if($res) return errorArray('该地址已添加');
