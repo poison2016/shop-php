@@ -40,10 +40,10 @@ class GetEthMoney extends Command
         foreach ($data as $item){
             $url = 'https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0xdAC17F958D2ee523a2206206994597C13D831ec7&address='.$item['address'].'&page=1&offset=50&startblock=0&endblock=27025780&sort=desc&apikey=I258Q362FE5J2YQN7RQF5XES8MZVN7D8KM';
             $ret = getCurlData($url);
-            var_dump($ret);
             if(!$ret) return [];
             if($ret['status'] == 1){
-                foreach ($ret['result'] as $v){
+                $result = array_reverse($ret['result']);
+                foreach ($result as $v){
                     if(strtolower($v['to']) == strtolower($item['address'])){
                         var_dump($v['hash']);
                         $ret = Db::name('tz_user_address_log')->where(['address'=>$v['from'],'txid'=>$v['hash']])->find();
@@ -55,6 +55,7 @@ class GetEthMoney extends Command
                         Db::name('tz_user_address_log')->where('id',$ret['id'])->update(['is_ok'=>1,'money'=>(double)$money]);
                         $wallet = Db::name('tz_wallet')->where('user_id',$ret['user_id'])->find();
                         Db::name('tz_wallet')->where('user_id',$ret['user_id'])->update(['money'=>$wallet['money']+$money]);
+                        echo "充值成功".PHP_EOL;
                     }
                 }
             }
