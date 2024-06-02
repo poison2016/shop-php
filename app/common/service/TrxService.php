@@ -43,33 +43,8 @@ class TrxService extends ComService
         $this->tron->setPrivateKey($prvKey);
         $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
 
-        // 预估交易消耗
-        $estimate = $contract->estimateEnergyUsage([
-            'function' => 'transfer',
-            'params' => [
-                'to' => $toAddress,
-                'value' => $amount
-            ]
-        ]);
-
-// 获取估算的能量和带宽消耗
-        $energyUsage = $estimate['energyUsage'];
-        $bandwidthUsage = $estimate['bandwidthUsage'];
-
-// 假设每 1 TRX 购买 1,000 能量
-        $trxPerEnergy = 1 / 1000;
-
-// 计算所需 TRX
-        $trxNeededForEnergy = $energyUsage * $trxPerEnergy;
-
-// 计算总费用
-        $totalTrxNeeded = $trxNeededForEnergy; // 可以忽略带宽费用，因为带宽消耗较小
-
-        echo "交易 10 USDT 需要大约 " . $totalTrxNeeded . " TRX";
-        exit();
-
 // 设置 Fee Limit
-        $feeLimitInSun = ceil($totalTrxNeeded * TRX_TO_SUN);
+        $contract->setFeeLimit(30);
         $result = $contract->transfer($toAddress, $amount);
         if ($result['result']) {
             $this->addressLogModel->insert([
