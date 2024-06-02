@@ -42,7 +42,6 @@ class GetEthMoney extends Command
             $ret = getCurlData($url);
             if(!$ret) return [];
             if($ret['status'] == 1){
-                var_dump($ret['result']);
                 foreach ($ret['result'] as $v){
                     if(strtolower($v['to']) == strtolower($item['address'])){
                         $ret = Db::name('tz_user_address_log')->where(['address'=>$v['from'],'txid'=>$v['hash']])->find();
@@ -50,7 +49,8 @@ class GetEthMoney extends Command
                         if($ret['is_ok'] == 1){
                             echo '未查询到新的充值 已中断'.PHP_EOL;exit();
                         }
-                        Db::name('tz_user_address_log')->where('id',$ret['id'])->update(['is_ok'=>1]);
+                        $money = $v['value']!= 0?bcdiv($v['value'], '1000000', 6):0;
+                        Db::name('tz_user_address_log')->where('id',$ret['id'])->update(['is_ok'=>1,'money'=>$money]);
 
                     }
                 }

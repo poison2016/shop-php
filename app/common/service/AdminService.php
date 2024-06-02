@@ -64,7 +64,8 @@ class AdminService extends ComService
     }
 
     public function insertAdminAddress($params){
-        $params['create_time'] =time();
+        $params['create_time'] = time();
+        var_dump($params);
         $ret = $this->userAddressModel->insert($params);
         if(!$ret) return errorArray('添加失败');
         return successArray(['id'=>$ret]);
