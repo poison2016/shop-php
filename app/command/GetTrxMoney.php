@@ -35,7 +35,15 @@ class GetTrxMoney extends Command
             $this->tron->setAddress($v['address']);
             $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
             $transactions = $contract->getTransactions($v['address'],200);
-            var_dump($transactions);
+            if(empty($transactions['data'])) continue;
+            foreach ($transactions['data'] as $item){
+                if($item['to'] == $v['address']){//接受币
+                    $ret = Db::name('tz_user_address_log')->where(['address'=>$item['from'],'tx_id'=>$item['transaction_id']])->where('is_ok',0)->find()->toArray();
+                    if(!$ret) continue;
+                    Db::name('tz_user_address_log')->where('id',$ret['id'])->update(['is_ok'=>1]);
+                    //将余额充值到数据库
+                }
+            }
         }
 
     }
