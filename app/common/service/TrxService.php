@@ -44,7 +44,7 @@ class TrxService extends ComService
         $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
 
 // 设置 Fee Limit
-        $contract->setFeeLimit(200);
+        $contract->setFeeLimit(50);
         $result = $contract->transfer($toAddress, $amount);
         if ($result['result']) {
             $this->addressLogModel->insert([
