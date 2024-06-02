@@ -3,6 +3,7 @@ declare (strict_types = 1);
 
 namespace app\command;
 
+use app\common\service\EthService;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
@@ -11,6 +12,12 @@ use think\console\Output;
 
 class GetEthMoney extends Command
 {
+    protected EthService $ethService;
+    public function __construct(EthService $ethService)
+    {
+        $this->ethService = $ethService;
+    }
+
     protected function configure()
     {
         // 指令配置
@@ -21,6 +28,6 @@ class GetEthMoney extends Command
     protected function execute(Input $input, Output $output)
     {
         // 指令输出
-        $output->writeln('getethmoney');
+        echo 'xxxxx';
     }
 }

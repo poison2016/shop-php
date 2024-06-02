@@ -7,5 +7,6 @@ return [
     'commands' => [
         'SendPrice' => 'app\command\SendPrice',
         'get_trx_money' => 'app\command\GetTrxMoney',
+        'get_eth_money' => 'app\command\GetEthMoney',
     ],
 ];
