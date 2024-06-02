@@ -11,7 +11,7 @@ use Web3\Contract;
 use Web3\Providers\HttpProvider;
 use Web3\RequestManagers\HttpRequestManager;
 use phpseclib\Math\BigInteger;
-use Web3\Utils;
+use xtype\Ethereum\Utils;
 use Web3p\EthereumTx\Transaction;
 use xtype\Ethereum\Client as EthereumClient;
 class EthService extends ComService
@@ -77,6 +77,36 @@ class EthService extends ComService
     }
 
     public function payUsdt($from,$to,$privateKey,$amount,$userId){
+        $client = new EthereumClient([
+            'base_uri' => 'https://mainnet.infura.io/v3/0b2cd0fcd60645829fc70e438f7fa505',
+            'timeout' => 10,
+        ]);
+
+        $client->addPrivateKeys([$privateKey]);
+
+        // 2. 组装交易
+        $trans = [
+            "from" => $from,
+            "to" => $to,
+            "value" => Utils::ethToWei($amount, true),
+            "data" => '0x',
+        ];
+        // 设定Gas，nonce，gasprice
+        $trans['gas'] = dechex(hexdec($client->eth_estimateGas($trans)) * 1.5);
+        $trans['gasPrice'] = $client->eth_gasPrice();
+        $trans['nonce'] = $client->eth_getTransactionCount('0xdac17f958d2ee523a2206206994597c13d831ec7', 'pending');
+        // 3. 发送您的交易
+        // 如果需要服务器，也可以使用eth_sendTransaction
+        $txid = $client->sendTransaction($trans);
+
+        //4.得到交易hash
+        var_dump($txid);
+
+        //查询到账情况
+        var_dump($client->eth_getTransactionReceipt($txid));
+    }
+
+    public function payUsdt1($from,$to,$privateKey,$amount,$userId){
 
         $infuraProjectId = '0b2cd0fcd60645829fc70e438f7fa505';
         $infuraUrl = "https://mainnet.infura.io/v3/$infuraProjectId";
