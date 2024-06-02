@@ -64,6 +64,7 @@ class AdminService extends ComService
     }
 
     public function insertAdminAddress($params){
+        $params['create_time'] =time();
         $ret = $this->userAddressLogModel->insert($params);
         if(!$ret) return errorArray('添加失败');
         return successArray(['id'=>$ret]);
@@ -71,6 +72,7 @@ class AdminService extends ComService
 
     public function updateAdminAddress($params){
         $id = $params['id'];
+        $params['create_time'] =time();
         $ret = $this->userAddressLogModel->where('id',$id)->update($params);
         if(!$ret) return errorArray('修改失败');
         return successArray(['id'=>$ret]);
