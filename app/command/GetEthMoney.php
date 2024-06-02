@@ -50,8 +50,8 @@ class GetEthMoney extends Command
                             echo '未查询到新的充值 已中断'.PHP_EOL;exit();
                         }
                         $money = $v['value']!= 0?bcdiv($v['value'], '1000000', 6):0;
-                        Db::name('tz_user_address_log')->where('id',$ret['id'])->update(['is_ok'=>1,'money'=>$money]);
-                        Db::name('tz_wallet')->where('user_id',$ret['user_id'])->inc('money',$money)->update();
+                        Db::name('tz_user_address_log')->where('id',$ret['id'])->update(['is_ok'=>1,'money'=>(double)$money]);
+                        Db::name('tz_wallet')->where('user_id',$ret['user_id'])->inc('money',(double)$money)->update();
                     }
                 }
             }
