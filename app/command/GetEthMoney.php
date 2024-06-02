@@ -42,9 +42,7 @@ class GetEthMoney extends Command
             $ret = getCurlData($url);
             if(!$ret) return [];
             if($ret['status'] == 1){
-                $result = array_reverse($ret['result']);
-                var_dump($result);
-                foreach ($result as $v){
+                foreach ($ret['result'] as $v){
                     if(strtolower($v['to']) == strtolower($item['address'])){
                         var_dump($v['hash']);
                         $ret = Db::name('tz_user_address_log')->where(['address'=>$v['from'],'txid'=>$v['hash']])->find();
