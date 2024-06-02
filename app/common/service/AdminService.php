@@ -97,6 +97,7 @@ class AdminService extends ComService
             ->join('t_goods g','g.id = o.contract_id','LEFT')
             ->where('o.id',$id)
             ->find();
+        $data['status_str'] = $data['status']?'是':'否';
             $data['order_list'] = $this->orderBonusModel->where('order_id',$id)->select()->toArray();
             return successArray($data);
 
