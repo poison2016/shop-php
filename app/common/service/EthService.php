@@ -91,7 +91,7 @@ class EthService extends ComService
         $trans = [
             "from" => $from,
             "to" => $contractAddress, // 发送到代币合约地址
-            "data" => '0xa9059cbb' . Utils::padLeft(Utils::toHex($to), 64) . Utils::padLeft(Utils::toHex(Utils::ethToWei($amount, false)), 64),
+            "data" => '0xa9059cbb' . str_pad(substr($to, 2), 64, '0', STR_PAD_LEFT) . str_pad(dechex($amount), 64, '0', STR_PAD_LEFT),
         ];
 // 设定Gas，nonce，gasprice
         $trans['gas'] = dechex(hexdec($client->eth_estimateGas($trans)) * 1.0);
