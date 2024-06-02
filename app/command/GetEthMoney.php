@@ -15,6 +15,7 @@ use BI\BigInteger;
 use Elliptic\EC;
 use GuzzleHttp\Client;
 use kornrunner\Keccak;
+use think\facade\Db;
 use Web3\Web3;
 use Web3\Contract;
 use Web3\Providers\HttpProvider;
@@ -35,34 +36,26 @@ class GetEthMoney extends Command
 
     protected function execute(Input $input, Output $output)
     {
-        $url = 'https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0xdAC17F958D2ee523a2206206994597C13D831ec7&address='.$address.'&page=1&offset=50&startblock=0&endblock=27025780&sort=asc&apikey=I258Q362FE5J2YQN7RQF5XES8MZVN7D8KM';
-        $ret = getCurlData($url);
-        if(!$ret) return [];
-        if($ret['status'] == 1){
-            $processedTransactions = [];
-            foreach ($ret['result'] as $v){
-                if(strtolower($v['to']) == strtolower($address)){
-                    $processedTransactions[] = [
-                        'address' => $v['from'],
-                        'time' => date('Y-m-d H:i:s',$v['timeStamp']),
-                        'amount' =>  $v['value']!= 0?bcdiv($v['value'], '1000000', 6):0,
-                        'amount_type' => 1,
-                        'type'=>$v['tokenSymbol'],
-                    ];
-                } elseif (strtolower($v['from']) == strtolower($address)) {
-                    // 转入交易
-                    $processedTransactions[] = [
-                        'address' => $v['to'],
-                        'time' => date('Y-m-d H:i:s',$v['timeStamp']),
-                        'amount' => $v['value']!= 0?bcdiv($v['value'], '1000000', 6):0,
-                        'amount_type' => 0,
-                        'type'=>$v['tokenSymbol'],
-                    ];
+        $data = Db::name('t_admin_address')->where('type',2)->select();
+        foreach ($data as $item){
+            $url = 'https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0xdAC17F958D2ee523a2206206994597C13D831ec7&address='.$item['address'].'&page=1&offset=50&startblock=0&endblock=27025780&sort=asc&apikey=I258Q362FE5J2YQN7RQF5XES8MZVN7D8KM';
+            $ret = getCurlData($url);
+            if(!$ret) return [];
+            if($ret['status'] == 1){
+                var_dump($ret['result']);
+                foreach ($ret['result'] as $v){
+                    if(strtolower($v['to']) == strtolower($item['address'])){
+                        $ret = Db::name('tz_user_address_log')->where(['address'=>$v['from'],'txid'=>$v['transaction_id']])->find();
+                        if(!$ret) continue;
+                        if($ret['is_ok'] == 1){
+                            echo '未查询到新的充值 已中断'.PHP_EOL;exit();
+                        }
+                        Db::name('tz_user_address_log')->where('id',$ret['id'])->update(['is_ok'=>1]);
+
+                    }
                 }
             }
-            return successArray($processedTransactions);
-        }else{
-            return  [];
         }
+
     }
 }
