@@ -8,9 +8,11 @@ use IEXBase\TronAPI\Provider\HttpProvider;
 use IEXBase\TronAPI\Tron;
 use think\facade\Config;
 use think\facade\Log;
+define('TRX_TO_SUN', 1000000);
 
 class TrxService extends ComService
 {
+
     protected $tron;
     protected UserAddressLogModel $addressLogModel;
 
@@ -35,22 +37,49 @@ class TrxService extends ComService
      * @param string $meAddress 支付地址
      * @return array|\think\response\Json
      */
-    public function transfer($toAddress, $amount,$prvKey,$meAddress,$userId = '123')
+    public function transfer($toAddress, $amount, $prvKey, $meAddress, $userId = '123')
     {
         $this->tron->setAddress($meAddress);
         $this->tron->setPrivateKey($prvKey);
         $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
-        $contract->setFeeLimit(30);
-        $result = $contract->transfer($toAddress,$amount);
-        if($result['result']){
+
+        // 预估交易消耗
+        $estimate = $contract->estimateEnergyUsage([
+            'function' => 'transfer',
+            'params' => [
+                'to' => $toAddress,
+                'value' => $amount
+            ]
+        ]);
+
+// 获取估算的能量和带宽消耗
+        $energyUsage = $estimate['energyUsage'];
+        $bandwidthUsage = $estimate['bandwidthUsage'];
+
+// 假设每 1 TRX 购买 1,000 能量
+        $trxPerEnergy = 1 / 1000;
+
+// 计算所需 TRX
+        $trxNeededForEnergy = $energyUsage * $trxPerEnergy;
+
+// 计算总费用
+        $totalTrxNeeded = $trxNeededForEnergy; // 可以忽略带宽费用，因为带宽消耗较小
+
+        echo "交易 10 USDT 需要大约 " . $totalTrxNeeded . " TRX";
+        exit();
+
+// 设置 Fee Limit
+        $feeLimitInSun = ceil($totalTrxNeeded * TRX_TO_SUN);
+        $result = $contract->transfer($toAddress, $amount);
+        if ($result['result']) {
             $this->addressLogModel->insert([
-                'user_id'=> $userId,
-                'address'=>$meAddress,
-                'txid'=>$result['txid'],
-                'money'=>$amount,
-                'create_time'=>time()
+                'user_id' => $userId,
+                'address' => $meAddress,
+                'txid' => $result['txid'],
+                'money' => $amount,
+                'create_time' => time()
             ]);
-            return successArray(['txid'=>$result['txid']],'交易中');
+            return successArray(['txid' => $result['txid']], '交易中');
         }
         return errorArray('交易失败');
     }
