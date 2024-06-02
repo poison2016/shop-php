@@ -38,9 +38,12 @@ class GetTrxMoney extends Command
             if(empty($transactions['data'])) continue;
             foreach ($transactions['data'] as $item){
                 if($item['to'] == $v['address']){//接受币
-                    $ret = Db::name('tz_user_address_log')->where(['address'=>$item['from'],'txid'=>$item['transaction_id']])->where('is_ok',0)->find();
+                    $ret = Db::name('tz_user_address_log')->where(['address'=>$item['from'],'txid'=>$item['transaction_id']])->find();
                     var_dump($ret);
                     if(!$ret) continue;
+                    if($transactions['is_ok'] == 1){
+                        echo '未查询到新的充值 已中断'.PHP_EOL;exit();
+                    }
                     Db::name('tz_user_address_log')->where('id',$ret['id'])->update(['is_ok'=>1]);
                     //将余额充值到数据库
                 }
