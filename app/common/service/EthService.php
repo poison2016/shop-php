@@ -2,7 +2,6 @@
 
 namespace app\common\service;
 use app\common\Tools\EthUsdtJson;
-use BI\BigInteger;
 use Elliptic\EC;
 use GuzzleHttp\Client;
 use kornrunner\Keccak;
@@ -11,6 +10,7 @@ use Web3\Web3;
 use Web3\Contract;
 use Web3\Providers\HttpProvider;
 use Web3\RequestManagers\HttpRequestManager;
+use phpseclib\Math\BigInteger;
 use Web3\Utils;
 use Web3p\EthereumTx\Transaction;
 use xtype\Ethereum\Client as EthereumClient;
@@ -77,93 +77,72 @@ class EthService extends ComService
     }
 
     public function payUsdt($from,$to,$privateKey,$amount,$userId){
+
         $infuraProjectId = '0b2cd0fcd60645829fc70e438f7fa505';
         $infuraUrl = "https://mainnet.infura.io/v3/$infuraProjectId";
         $web3 = new Web3(new HttpProvider(new HttpRequestManager($infuraUrl)));
         $usdtContractAddress = '0xdac17f958d2ee523a2206206994597c13d831ec7'; // USDT 合约地址
         $usdtDecimals = 6; // USDT 代币的小数位数
 
-
         $abi = json_decode(EthUsdtJson::getJson(), true);
-
-// 检查方法是否存在
-
 
 // 转账数量（例如，发送 100 USDT）
         $amountInWei = bcmul($amount, bcpow('10', $usdtDecimals));
 // 构建交易数据
         $contract = new Contract($web3->getProvider(), json_decode($abi['result'], true));
-        $transactionData = $contract->at($usdtContractAddress)->getData('transfer', $to, $amountInWei);
+        $transactionData = $contract->at($usdtContractAddress)->getData('transfer', $to, new BigInteger($amountInWei));
         var_dump('准备发起');
+
 // 获取账户 nonce
         try {
-        $web3->eth->getTransactionCount($from, 'pending', function ($err, $nonce) use ($web3, $from, $to, $usdtContractAddress, $transactionData, $privateKey,$userId,$amount) {
+            $web3->eth->getTransactionCount($from, 'pending', function ($err, $nonce) use ($web3, $from, $to, $usdtContractAddress, $transactionData, $privateKey, $userId, $amount) {
+                if ($err !== null) {
+                    echo 'Error: ' . $err->getMessage();
+                    return;
+                }
+                var_dump('准备就绪');
 
-            if ($err !== null) {
-                echo 'Error: ' . $err->getMessage();
-                return;
-            }
-            var_dump('准备就绪');
-            // 创建交易对象
-            // 确保 nonce 是整数
-//            if ($nonce instanceof BigInteger) {
-//                $nonce = hexdec($nonce->toString()); // 转换为十进制整数
-//            }
-//            var_dump($nonce);
-//            $ass = json_decode(json_encode($nonce),true);
-//            var_dump($ass);exit();
-//            $num = json_decode(json_encode($ass),true)['num'];
+                // 将 nonce 转换为整数
+                $nonceValue = $nonce->toString();
 
+                $transaction = [
+                    'nonce' => '0x' . dechex($nonceValue),
+                    'from' => $from,
+                    'to' => $usdtContractAddress,
+                    'value' => '0x0',
+                    'gas' => '0x5208', // gas 限制
+                    'gasPrice' => '0x4a817c800', // gas 价格
+                    'data' => $transactionData,
+                ];
 
-            $nonceValue = hexdec($nonce->toString());
-            $transaction = [
-                'nonce' => '0x' . dechex($nonceValue),
-                'from' => $from,
-                'to' => $usdtContractAddress,
-                'value' => '0x0',
-                'gas' => '0x5208', // gas 限制
-                'gasPrice' => '0x4a817c800', // gas 价格
-                'data' => $transactionData,
-            ];
-
-            // 签名交易
-            $ec = new EC('secp256k1');
-            $keccak = new Keccak(256);
-            $hash = $keccak->hash(hex2bin($transaction['data']), 256);
-            $privateKey = str_pad($privateKey, 64, '0', STR_PAD_LEFT);
-            $signature = $ec->sign($hash, $privateKey, 'hex', ['canonical' => true]);
-            $r = $signature->r->toString('hex');
-            $s = $signature->s->toString('hex');
-            $v = $signature->recoveryParam + 27;
-            // 使用 PHP Web3 库签名交易
-                var_dump('准备签名');
-                $web3->eth->accounts->signTransaction($transaction, $privateKey, function ($err, $signedTx) use ($web3,$userId,$from,$amount) {
+                // 签名交易
+                $web3->eth->accounts->signTransaction($transaction, $privateKey, function ($err, $signedTx) use ($web3, $userId, $from, $amount) {
                     if ($err !== null) {
-                        return errorArray($err->getMessage());
+                        echo 'Error: ' . $err->getMessage();
+                        return;
                     }
                     var_dump('签名通过');
+
                     // 发送签名的交易
-                    $web3->eth->sendRawTransaction($signedTx, function ($err, $tx) use ($userId,$from,$amount) {
+                    $web3->eth->sendRawTransaction($signedTx, function ($err, $tx) use ($userId, $from, $amount) {
                         if ($err !== null) {
-                            return errorArray($err->getMessage());
+                            echo 'Error: ' . $err->getMessage();
+                            return;
                         }
                         var_dump('获取到交易的');
                         var_dump($tx);
                         Db::name('tz_user_address_log')->insert([
-                            'user_id'=> $userId,
-                            'address'=>$from,
-                            'txid'=>$tx,
-                            'money'=>$amount,
-                            'create_time'=>time()
+                            'user_id' => $userId,
+                            'address' => $from,
+                            'txid' => $tx,
+                            'money' => $amount,
+                            'create_time' => time()
                         ]);
-                        return successArray(['tx'=>$tx]);
+                        return successArray(['tx' => $tx]);
                     });
-                    return successArray('交易中');
                 });
-
-        });
-        return successArray('交易中');
-        }catch (\Error $exception){
+            });
+        } catch (\Error $exception) {
             var_dump($exception->getMessage());
             return errorArray('账户余额不足');
         }
