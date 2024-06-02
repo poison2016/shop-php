@@ -56,16 +56,16 @@ class AdminService extends ComService
     }
 
     public function getAdminAddressList(){
-        return successArray($this->userAddressLogModel->paginate(tp_page()));
+        return successArray($this->userAddressModel->paginate(tp_page()));
     }
     public function getAdminAddressInfo($id){
-        $data = $this->userAddressLogModel->where('id',$id)->find();
+        $data = $this->userAddressModel->where('id',$id)->find();
         return successArray($data);
     }
 
     public function insertAdminAddress($params){
         $params['create_time'] =time();
-        $ret = $this->userAddressLogModel->insert($params);
+        $ret = $this->userAddressModel->insert($params);
         if(!$ret) return errorArray('添加失败');
         return successArray(['id'=>$ret]);
     }
@@ -73,13 +73,13 @@ class AdminService extends ComService
     public function updateAdminAddress($params){
         $id = $params['id'];
         $params['create_time'] =time();
-        $ret = $this->userAddressLogModel->where('id',$id)->update($params);
+        $ret = $this->userAddressModel->where('id',$id)->update($params);
         if(!$ret) return errorArray('修改失败');
         return successArray(['id'=>$ret]);
     }
 
     public function delAdminAddress($id){
-        $ret = $this->userAddressLogModel->where('id',$id)->delete();
+        $ret = $this->userAddressModel->where('id',$id)->delete();
         if(!$ret) return errorArray('删除失败');
         return successArray(['id'=>$id]);
     }
