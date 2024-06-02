@@ -69,7 +69,7 @@ class EthService extends ComService
                     ];
                 }
             }
-            return successArray($processedTransactions);
+            return successArray(['list'=>$processedTransactions]);
         }else{
             return  [];
         }
