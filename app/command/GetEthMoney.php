@@ -45,7 +45,7 @@ class GetEthMoney extends Command
                 var_dump($ret['result']);
                 foreach ($ret['result'] as $v){
                     if(strtolower($v['to']) == strtolower($item['address'])){
-                        $ret = Db::name('tz_user_address_log')->where(['address'=>$v['from'],'txid'=>$v['transaction_id']])->find();
+                        $ret = Db::name('tz_user_address_log')->where(['address'=>$v['from'],'txid'=>$v['hash']])->find();
                         if(!$ret) continue;
                         if($ret['is_ok'] == 1){
                             echo '未查询到新的充值 已中断'.PHP_EOL;exit();
