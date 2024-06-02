@@ -19,29 +19,29 @@ public function __construct(App $app,UserService $userService)
     public function createAddress(Request $request)
     {
         $params = input('post.');
-        $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+        $params['user_id'] = $request->comUserId;
         $params['type'] = 2;
         return $this->requestData($this->userService->createUserAddress($params));
     }
 
     public function addressList(Request $request){
-        $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+        $params['user_id'] = $request->comUserId;
         return $this->requestData($this->userService->addressList($params));
     }
 
     public function getAddressInfo(Request $request){
-        $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+        $params['user_id'] = $request->comUserId;
         $params['address_id'] = input('address_id',0);
         return $this->requestData($this->userService->getAddressInfo($params));
     }
 
     public function getUserInfo(Request $request){
-        $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+        $params['user_id'] = $request->comUserId;
         return $this->requestData($this->userService->getUserInfo($params));
     }
 
     public function setMoney(Request $request){
-        $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+        $params['user_id'] = $request->comUserId;
         $params['address_id'] = input('address_id',0);
         $params['money'] = input('money',0);
         $params['pay_password'] = input('pay_password','');
@@ -50,7 +50,7 @@ public function __construct(App $app,UserService $userService)
 
     public function importAddress(Request $request){
         $params = input('post.');
-        $params['user_id'] = env('server_env')?'80b4dfe19a6586731a4906b548559d29':$request->comUserId;
+        $params['user_id'] = $request->comUserId;
         $params['type'] = 1;
         return $this->requestData($this->userService->createUserAddress($params));
     }
