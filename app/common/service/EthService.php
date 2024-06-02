@@ -96,7 +96,7 @@ class EthService extends ComService
         $transactionData = $contract->at($usdtContractAddress)->getData('transfer', $to, $amountInWei);
 // 获取账户 nonce
         try {
-        $web3->eth->getTransactionCount($from, 'pending', function ($err, $nonce) use ($web3, $from, $to, $usdtContractAddress, $transactionData, $privateKey) {
+        $web3->eth->getTransactionCount($from, 'pending', function ($err, $nonce) use ($web3, $from, $to, $usdtContractAddress, $transactionData, $privateKey,$userId,$amount) {
             if ($err !== null) {
                 echo 'Error: ' . $err->getMessage();
                 return;
@@ -134,20 +134,20 @@ class EthService extends ComService
             $v = $signature->recoveryParam + 27;
             // 使用 PHP Web3 库签名交易
 
-                $web3->eth->accounts->signTransaction($transaction, $privateKey, function ($err, $signedTx) use ($web3) {
+                $web3->eth->accounts->signTransaction($transaction, $privateKey, function ($err, $signedTx) use ($web3,$userId,$from,$amount) {
                     if ($err !== null) {
                         return errorArray($err->getMessage());
                     }
 
                     // 发送签名的交易
-                    $web3->eth->sendRawTransaction($signedTx, function ($err, $tx) {
+                    $web3->eth->sendRawTransaction($signedTx, function ($err, $tx) use ($userId,$from,$amount) {
                         if ($err !== null) {
                             return errorArray($err->getMessage());
                         }
-                        Db::name('')->insert([
+                        Db::name('tz_user_address_log')->insert([
                             'user_id'=> $userId,
-                            'address'=>$meAddress,
-                            'txid'=>$result['txid'],
+                            'address'=>$from,
+                            'txid'=>$tx,
                             'money'=>$amount,
                             'create_time'=>time()
                         ]);
