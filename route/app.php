@@ -41,6 +41,11 @@ Route::group('admins/admin', function () {
     Route::any('coinList','coinList');
     Route::any('delCoin','delCoin');
     Route::any('uploadImg','uploadImg');
+    Route::any('getAdminAddressList','getAdminAddressList');
+    Route::any('getAdminAddressInfo','getAdminAddressInfo');
+    Route::any('insertAdminAddress','insertAdminAddress');
+    Route::any('updateAdminAddress','updateAdminAddress');
+    Route::any('delAdminAddress','delAdminAddress');
 })->prefix('admins/admin/');
 
 Route::group('apis/order', function () {

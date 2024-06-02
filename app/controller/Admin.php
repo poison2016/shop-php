@@ -48,6 +48,23 @@ class Admin extends BaseController
         return $this->requestData($this->adminService->delCoin(input('id')));
     }
 
+    public function getAdminAddressList(){
+        return $this->requestData($this->adminService->getAdminAddressList());
+    }
+    public function getAdminAddressInfo(){
+        return $this->requestData($this->adminService->getAdminAddressInfo(input('id')));
+    }
+    public function insertAdminAddress(){
+        return $this->requestData($this->adminService->insertAdminAddress(input('post.')));
+    }
+    public function updateAdminAddress(){
+        return $this->requestData($this->adminService->updateAdminAddress(input('post.')));
+    }
+    public function delAdminAddress(){
+        return $this->requestData($this->adminService->delAdminAddress(input('id')));
+    }
+
+
     public function uploadImg(){
         return $this->requestData($this->adminService->uploadImg());
     }

@@ -5,6 +5,7 @@ namespace app\common\service;
 use app\common\model\GoodsModel;
 use app\common\model\OrderBonusModel;
 use app\common\model\OrderModel;
+use app\common\model\UserAddressLogModel;
 use app\common\model\UserAddressModel;
 use think\facade\Db;
 use think\facade\Filesystem;
@@ -16,13 +17,15 @@ class AdminService extends ComService
     protected OrderModel $orderModel;
     protected OrderBonusModel $orderBonusModel;
     protected UserAddressModel $userAddressModel;
+    protected UserAddressLogModel $userAddressLogModel;
     public function __construct(GoodsModel $goodsModel,OrderModel $orderModel,OrderBonusModel $orderBonusModel
-    ,UserAddressModel $userAddressModel)
+    ,UserAddressModel $userAddressModel,UserAddressLogModel $userAddressLogModel)
     {
         $this->goodsModel = $goodsModel;
         $this->orderModel = $orderModel;
         $this->orderBonusModel = $orderBonusModel;
         $this->userAddressModel = $userAddressModel;
+        $this->userAddressLogModel = $userAddressLogModel;
     }
 
     public function getGoodsList(){
@@ -48,6 +51,33 @@ class AdminService extends ComService
 
     public function delGoods($id){
         $ret = $this->goodsModel->where('id',$id)->delete();
+        if(!$ret) return errorArray('删除失败');
+        return successArray(['id'=>$id]);
+    }
+
+    public function getAdminAddressList(){
+        return successArray($this->userAddressLogModel->paginate(tp_page()));
+    }
+    public function getAdminAddressInfo($id){
+        $data = $this->userAddressLogModel->where('id',$id)->find();
+        return successArray($data);
+    }
+
+    public function insertAdminAddress($params){
+        $ret = $this->userAddressLogModel->insert($params);
+        if(!$ret) return errorArray('添加失败');
+        return successArray(['id'=>$ret]);
+    }
+
+    public function updateAdminAddress($params){
+        $id = $params['id'];
+        $ret = $this->userAddressLogModel->where('id',$id)->update($params);
+        if(!$ret) return errorArray('修改失败');
+        return successArray(['id'=>$ret]);
+    }
+
+    public function delAdminAddress($id){
+        $ret = $this->userAddressLogModel->where('id',$id)->delete();
         if(!$ret) return errorArray('删除失败');
         return successArray(['id'=>$id]);
     }
