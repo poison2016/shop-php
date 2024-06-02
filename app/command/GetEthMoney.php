@@ -43,6 +43,7 @@ class GetEthMoney extends Command
             if(!$ret) return [];
             if($ret['status'] == 1){
                 $result = array_reverse($ret['result']);
+                var_dump($result);
                 foreach ($result as $v){
                     if(strtolower($v['to']) == strtolower($item['address'])){
                         var_dump($v['hash']);
