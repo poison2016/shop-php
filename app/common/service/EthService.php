@@ -94,13 +94,16 @@ class EthService extends ComService
 // 构建交易数据
         $contract = new Contract($web3->getProvider(), json_decode($abi['result'], true));
         $transactionData = $contract->at($usdtContractAddress)->getData('transfer', $to, $amountInWei);
+        var_dump('准备发起');
 // 获取账户 nonce
         try {
         $web3->eth->getTransactionCount($from, 'pending', function ($err, $nonce) use ($web3, $from, $to, $usdtContractAddress, $transactionData, $privateKey,$userId,$amount) {
+
             if ($err !== null) {
                 echo 'Error: ' . $err->getMessage();
                 return;
             }
+            var_dump('准备就绪');
             // 创建交易对象
             // 确保 nonce 是整数
 //            if ($nonce instanceof BigInteger) {
@@ -133,17 +136,19 @@ class EthService extends ComService
             $s = $signature->s->toString('hex');
             $v = $signature->recoveryParam + 27;
             // 使用 PHP Web3 库签名交易
-
+                var_dump('准备签名');
                 $web3->eth->accounts->signTransaction($transaction, $privateKey, function ($err, $signedTx) use ($web3,$userId,$from,$amount) {
                     if ($err !== null) {
                         return errorArray($err->getMessage());
                     }
-
+                    var_dump('签名通过');
                     // 发送签名的交易
                     $web3->eth->sendRawTransaction($signedTx, function ($err, $tx) use ($userId,$from,$amount) {
                         if ($err !== null) {
                             return errorArray($err->getMessage());
                         }
+                        var_dump('获取到交易的');
+                        var_dump($tx);
                         Db::name('tz_user_address_log')->insert([
                             'user_id'=> $userId,
                             'address'=>$from,
