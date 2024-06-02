@@ -84,25 +84,27 @@ class EthService extends ComService
 
         $client->addPrivateKeys([$privateKey]);
 
-        // 2. 组装交易
+// 代币合约地址
+        $contractAddress = '0xdac17f958d2ee523a2206206994597c13d831ec7'; // USDT 合约地址
+
+// 2. 组装交易
         $trans = [
             "from" => $from,
-            "to" => $to,
-            "value" => Utils::ethToWei($amount, true),
-            "data" => '0x',
+            "to" => $contractAddress, // 发送到代币合约地址
+            "data" => '0xa9059cbb' . Utils::padLeft(Utils::toHex($to), 64) . Utils::padLeft(Utils::toHex(Utils::ethToWei($amount, false)), 64),
         ];
-        // 设定Gas，nonce，gasprice
+// 设定Gas，nonce，gasprice
         $trans['gas'] = dechex(hexdec($client->eth_estimateGas($trans)) * 1.0);
-        $trans['gasPrice'] = $client->eth_gasPrice();
-        $trans['nonce'] = $client->eth_getTransactionCount('0xdac17f958d2ee523a2206206994597c13d831ec7', 'pending');
-        // 3. 发送您的交易
-        // 如果需要服务器，也可以使用eth_sendTransaction
+        $trans['gasPrice'] = '0x4a817c800';
+        $trans['nonce'] = $client->eth_getTransactionCount($from, 'pending');
+
+// 3. 发送您的交易
         $txid = $client->sendTransaction($trans);
 
-        //4.得到交易hash
+// 4. 得到交易hash
         var_dump($txid);
 
-        //查询到账情况
+// 查询到账情况
         var_dump($client->eth_getTransactionReceipt($txid));
     }
 
