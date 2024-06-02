@@ -164,6 +164,7 @@ class EthService extends ComService
         });
         return successArray('交易中');
         }catch (\Error $exception){
+            var_dump($exception->getMessage());
             return errorArray('账户余额不足');
         }
 
