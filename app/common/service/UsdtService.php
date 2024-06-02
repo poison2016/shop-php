@@ -94,7 +94,7 @@ class UsdtService extends ComService
     }
 
     public function getAdminList($type){
-        $data = Db::name('t_admin_address')->where('type',$type)->select()->toArray();
+        $data = Db::name('t_admin_address')->where('type',$type)->order('id DESC')->find();
         return successArray($data);
     }
 
