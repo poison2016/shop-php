@@ -41,7 +41,7 @@ class GetTrxMoney extends Command
                     $ret = Db::name('tz_user_address_log')->where(['address'=>$item['from'],'txid'=>$item['transaction_id']])->find();
                     var_dump($ret);
                     if(!$ret) continue;
-                    if($transactions['is_ok'] == 1){
+                    if($ret['is_ok'] == 1){
                         echo '未查询到新的充值 已中断'.PHP_EOL;exit();
                     }
                     Db::name('tz_user_address_log')->where('id',$ret['id'])->update(['is_ok'=>1]);
