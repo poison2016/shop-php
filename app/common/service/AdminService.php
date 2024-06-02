@@ -56,17 +56,17 @@ class AdminService extends ComService
     }
 
     public function getAdminAddressList(){
-        return successArray($this->userAddressModel->paginate(tp_page()));
+        return successArray(Db::name('admin_address')->paginate(tp_page()));
     }
     public function getAdminAddressInfo($id){
-        $data = $this->userAddressModel->where('id',$id)->find();
+        $data = Db::name('admin_address')->where('id',$id)->find();
         return successArray($data);
     }
 
     public function insertAdminAddress($params){
         $params['create_time'] = time();
-        var_dump($params);
-        $ret = $this->userAddressModel->insert($params);
+        $params['type'] = (int)$params['type'];
+        $ret = Db::name('admin_address')->insert($params);
         if(!$ret) return errorArray('添加失败');
         return successArray(['id'=>$ret]);
     }
@@ -74,13 +74,13 @@ class AdminService extends ComService
     public function updateAdminAddress($params){
         $id = $params['id'];
         $params['create_time'] =time();
-        $ret = $this->userAddressModel->where('id',$id)->update($params);
+        $ret = Db::name('admin_address')->where('id',$id)->update($params);
         if(!$ret) return errorArray('修改失败');
         return successArray(['id'=>$ret]);
     }
 
     public function delAdminAddress($id){
-        $ret = $this->userAddressModel->where('id',$id)->delete();
+        $ret = Db::name('admin_address')->where('id',$id)->delete();
         if(!$ret) return errorArray('删除失败');
         return successArray(['id'=>$id]);
     }
