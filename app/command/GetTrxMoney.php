@@ -43,9 +43,7 @@ class GetTrxMoney extends Command
                     if($ret['is_ok'] == 1){
                         echo '未查询到新的充值 已中断'.PHP_EOL;exit();
                     }
-                    var_dump($item);
-                    var_dump($v['value']);exit();
-                    $money = $v['value']!= 0?bcdiv($v['value'], '1000000', 6):0;
+                    $money = $item['value']!= 0?bcdiv($item['value'], '1000000', 6):0;
                     Db::name('tz_user_address_log')->where('id',$ret['id'])->update(['is_ok'=>1,'money'=>(double)$money]);
                     $wallet = Db::name('tz_wallet')->where('user_id',$ret['user_id'])->find();
                     Db::name('tz_wallet')->where('user_id',$ret['user_id'])->update(['money'=>$wallet['money']+$money]);
