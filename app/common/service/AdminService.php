@@ -133,7 +133,7 @@ class AdminService extends ComService
             return errorArray('文件上传失败');
         }
         // 获取完整URL
-        $domain = Request::domain();
+        $domain = env('update_img');
         $url = $domain . '/storage/' . $savename;
         return successArray(['url'=>$url]);
     }
