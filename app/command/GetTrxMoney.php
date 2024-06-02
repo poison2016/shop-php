@@ -36,7 +36,6 @@ class GetTrxMoney extends Command
             $contract = $this->tron->contract('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
             $transactions = $contract->getTransactions($v['address'],200);
             if(empty($transactions['data'])) continue;
-            var_dump($transactions['data']);
             foreach ($transactions['data'] as $item){
                 if($item['to'] == $v['address']){//接受币
                     $ret = Db::name('tz_user_address_log')->where(['address'=>$item['from'],'txid'=>$item['transaction_id']])->find();
@@ -44,6 +43,8 @@ class GetTrxMoney extends Command
                     if($ret['is_ok'] == 1){
                         echo '未查询到新的充值 已中断'.PHP_EOL;exit();
                     }
+                    var_dump($item);
+                    var_dump($v['value']);exit();
                     $money = $v['value']!= 0?bcdiv($v['value'], '1000000', 6):0;
                     Db::name('tz_user_address_log')->where('id',$ret['id'])->update(['is_ok'=>1,'money'=>(double)$money]);
                     $wallet = Db::name('tz_wallet')->where('user_id',$ret['user_id'])->find();
