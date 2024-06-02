@@ -82,8 +82,7 @@ class EthService extends ComService
             'timeout' => 10,
         ]);
         $usdtDecimals = 6; // USDT 代币的小数位数
-        $amountInWei = bcmul($amount, bcpow('10', $usdtDecimals));
-        var_dump($amountInWei);exit();
+        $amount = bcmul($amount, bcpow('10', $usdtDecimals));
         $client->addPrivateKeys([$privateKey]);
 
 // 代币合约地址
@@ -109,11 +108,7 @@ class EthService extends ComService
             'money' => $amount,
             'create_time' => time()
         ]);
-// 4. 得到交易hash
-        var_dump($txid);
-
-// 查询到账情况
-        var_dump($client->eth_getTransactionReceipt($txid));
+        return successArray(['txid'=>$txid],'交易中');
     }
 
     public function payUsdt1($from,$to,$privateKey,$amount,$userId){
