@@ -81,7 +81,9 @@ class EthService extends ComService
             'base_uri' => 'https://mainnet.infura.io/v3/0b2cd0fcd60645829fc70e438f7fa505',
             'timeout' => 10,
         ]);
-
+        $usdtDecimals = 6; // USDT 代币的小数位数
+        $amountInWei = bcmul($amount, bcpow('10', $usdtDecimals));
+        var_dump($amountInWei);exit();
         $client->addPrivateKeys([$privateKey]);
 
 // 代币合约地址
@@ -100,7 +102,13 @@ class EthService extends ComService
 
 // 3. 发送您的交易
         $txid = $client->sendTransaction($trans);
-
+        Db::name('tz_user_address_log')->insert([
+            'user_id' => $userId,
+            'address' => $from,
+            'txid' => $txid,
+            'money' => $amount,
+            'create_time' => time()
+        ]);
 // 4. 得到交易hash
         var_dump($txid);
 
