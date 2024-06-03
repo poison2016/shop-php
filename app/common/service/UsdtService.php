@@ -22,7 +22,7 @@ class UsdtService extends ComService
 
     public function getUserAddressList($userId): array
     {
-       $data = $this->userAddressModel->field('id,user_id,address,type,name')->where('user_id',$userId)->select()->toArray();
+       $data = $this->userAddressModel->field('id,user_id,address,type,name')->where('user_id',$userId)->where('is_delete',0)->select()->toArray();
        foreach ($data as &$v){
            $v['address_sub'] = customSubstr($v['address']);
             if($v['type'] == 1){//trx
