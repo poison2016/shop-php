@@ -44,7 +44,7 @@ class UsdtService extends ComService
     }
 
     public function SendMoney($params){
-        $userAddressInfo = $this->userAddressModel->where(['address'=>$params['address'],'user_id'=>$params['user_id']])->find();
+        $userAddressInfo = $this->userAddressModel->where(['address'=>$params['address'],'user_id'=>$params['user_id']])->where('is_delete',0)->find();
         if(!$userAddressInfo) return errorArray('地址不存在');
         if($userAddressInfo['password'] !== md5Password($params['pay_password'])) return  errorArray('钱包密码不正确');
         if($userAddressInfo['type'] == 1){//trx
@@ -57,7 +57,7 @@ class UsdtService extends ComService
 
     public function getAddressInfo($params)
     {
-        $userAddressInfo = $this->userAddressModel->field('id,user_id,address,type,name')->where(['address' => $params['address'], 'user_id' => $params['user_id']])->find();
+        $userAddressInfo = $this->userAddressModel->field('id,user_id,address,type,name')->where(['address' => $params['address'], 'user_id' => $params['user_id']])->where('is_delete',0)->find();
         if (!$userAddressInfo) return errorArray('地址不存在');
         if ($userAddressInfo['type'] == 1) {
             $trx = $this->trxService->getBalance($userAddressInfo['address'])['data'];
@@ -75,7 +75,7 @@ class UsdtService extends ComService
             $params['prv_key'] = '0x'.$params['prv_key'];
         }
         unset($params['pay_password']);
-        $res = $this->userAddressModel->where('address',$params['address'])->find();
+        $res = $this->userAddressModel->where('address',$params['address'])->where('is_delete',0)->find();
         if($res) return errorArray('该地址已添加');
         $ret = $this->userAddressModel->insert($params);
         if(!$ret) return errorArray('提交失败');
@@ -83,7 +83,7 @@ class UsdtService extends ComService
     }
 
     public function getList($params){
-        $userAddressInfo = $this->userAddressModel->where(['address'=>$params['address'],'user_id'=>$params['user_id']])->find();
+        $userAddressInfo = $this->userAddressModel->where(['address'=>$params['address'],'user_id'=>$params['user_id']])->where('is_delete',0)->find();
         if(!$userAddressInfo) return errorArray('地址不存在');
         if($userAddressInfo['type'] == 1){
             return $this->trxService->getTrxList($params['address']);
