@@ -86,4 +86,10 @@ class Usdt extends BaseController
         return $this->requestData($this->usdtService->getAdminList(input('type')));
     }
 
+    public function delAddress(Request $request){
+        $params['user_id'] = $request->comUserId;
+        $params['id'] = input('id','');
+        return $this->requestData($this->usdtService->delAddress($params['id'],$params['user_id']));
+    }
+
 }

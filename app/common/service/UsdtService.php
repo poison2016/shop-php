@@ -37,6 +37,12 @@ class UsdtService extends ComService
        return successArray($data);
     }
 
+    public function delAddress($id,$userId){
+        $ret = $this->userAddressModel->where('id',$id)->where('user_id',$userId)->update(['is_delete'=>1]);
+        if(!$ret) return errorArray('删除失败');
+        return successArray(['id'=>$id],'删除成功');
+    }
+
     public function SendMoney($params){
         $userAddressInfo = $this->userAddressModel->where(['address'=>$params['address'],'user_id'=>$params['user_id']])->find();
         if(!$userAddressInfo) return errorArray('地址不存在');
