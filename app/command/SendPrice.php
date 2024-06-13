@@ -52,18 +52,18 @@ class SendPrice extends Command
             var_dump('处理订单号'.$res['order_id']);
             $insertUser['money'] = floatval($userData['money']) + floatval($res['money']);
 //            $insertUser['account'] = floatval($userData['account']) + floatval($res['money']);
-            $hhhh = $res['money'];
-            if(floatval($res['money']) > floatval($v['total_amounts'])){//如果包含本金
-                $hhhh -= $v['total_amounts'];
-                $bbbbb = floatval($userData['position']) - floatval($v['total_amounts']);
-                if($bbbbb < 0) $bbbbb = 0;
-//                $insertUser['position'] = $bbbbb;
-                //$insertUser['money'] = $userData['money'] + $res['money']- $v['total_amounts'];
-//                $insertUser['account'] = floatval($userData['account']) + floatval($res['money']) - floatval($v['total_amounts']);
-                var_dump('处理订单号'.$res['order_id'].'返回本金');
-
-                //LogService::userMoneyLog($userData, $v['total_amounts'], 1, '资产包本金返回', '资产包本金返回', 4,$res['create_time']);
-            }
+//            $hhhh = $res['money'];
+//            if(floatval($res['money']) > floatval($v['total_amounts'])){//如果包含本金
+//                $hhhh -= $v['total_amounts'];
+//                $bbbbb = floatval($userData['position']) - floatval($v['total_amounts']);
+//                if($bbbbb < 0) $bbbbb = 0;
+////                $insertUser['position'] = $bbbbb;
+//                //$insertUser['money'] = $userData['money'] + $res['money']- $v['total_amounts'];
+////                $insertUser['account'] = floatval($userData['account']) + floatval($res['money']) - floatval($v['total_amounts']);
+//                var_dump('处理订单号'.$res['order_id'].'返回本金');
+//
+//                //LogService::userMoneyLog($userData, $v['total_amounts'], 1, '资产包本金返回', '资产包本金返回', 4,$res['create_time']);
+//            }
             Db::name('tz_wallet')->where('user_id', $v['user_id'])->update($insertUser);
             //LogService::userMoneyLog($userData, $hhhh, 1, '资产包收益', '资产包收益', 4,$res['create_time']);
             //查询总数量 剩余一条 关闭订单

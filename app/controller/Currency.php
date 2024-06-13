@@ -22,7 +22,7 @@ class Currency extends BaseController
     {
         $params['user_id'] = $request->comUserId;
         $params['address_id'] = input('address_id',0);
-        $params['number'] = input('address_id',0);
+        $params['number'] = input('number',0);
         $rule = [
             'user_id' => ['must', '', 'token不能为空'],
             'address_id' => ['must', '', '地址不能为空'],
