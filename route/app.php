@@ -54,6 +54,12 @@ Route::group('apis/order', function () {
     Route::any('info', 'info')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
 
 })->prefix('apis/order/')->middleware('\app\middleware\CheckToken');;
+
+Route::group('apis/currency', function () {
+    Route::any('addCurrency', 'addCurrency')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
+
+})->prefix('apis/currency/')->middleware('\app\middleware\CheckToken');;
+
 Route::group('apis/usdt', function () {
     Route::any('test', 'test')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
     Route::any('userWalletList', 'userWalletList')->middleware('\app\middleware\CheckToken')->middleware('\app\middleware\Throttle');//限制1秒只能请求一次
