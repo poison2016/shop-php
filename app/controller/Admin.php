@@ -4,6 +4,7 @@ namespace app\controller;
 
 use app\BaseController;
 use app\common\service\AdminService;
+use app\common\service\CurrencyService;
 use think\App;
 use think\facade\Filesystem;
 use think\facade\Request;
@@ -11,11 +12,13 @@ use think\facade\Request;
 class Admin extends BaseController
 {
     protected AdminService $adminService;
+    protected CurrencyService $currencyService;
 
-    public function __construct(App $app,AdminService $adminService)
+    public function __construct(App $app,AdminService $adminService,CurrencyService $currencyService)
     {
         parent::__construct($app);
         $this->adminService = $adminService;
+        $this->currencyService = $currencyService;
     }
     public function getGoodsList(){
         return $this->requestData($this->adminService->getGoodsList());
@@ -62,6 +65,13 @@ class Admin extends BaseController
     }
     public function delAdminAddress(){
         return $this->requestData($this->adminService->delAdminAddress(input('id')));
+    }
+
+    public function getCurrency(){
+        return $this->requestData($this->currencyService->getCurrency());
+    }
+    public function setCurrency(){
+        return $this->requestData($this->currencyService->setCurrency(input('id',0),input('type')));
     }
 
 

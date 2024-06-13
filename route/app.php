@@ -46,6 +46,8 @@ Route::group('admins/admin', function () {
     Route::any('insertAdminAddress','insertAdminAddress');
     Route::any('updateAdminAddress','updateAdminAddress');
     Route::any('delAdminAddress','delAdminAddress');
+    Route::any('getCurrency','getCurrency');
+    Route::any('setCurrency','setCurrency');
 })->prefix('admins/admin/');
 
 Route::group('apis/order', function () {
