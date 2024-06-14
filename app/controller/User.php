@@ -125,6 +125,10 @@ public function __construct(App $app,UserService $userService)
         return hash_equals($expectedEncoded, $encodedPassword);
     }
 
+    public function getUserInfoData(Request $request){
+        return $this->requestData($this->userService->getUserInfoData($request->comUserId));
+    }
+
 
 
 }

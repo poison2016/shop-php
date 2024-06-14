@@ -81,6 +81,7 @@ Route::group('apis/user', function () {
     Route::any('getAddressInfo', 'getAddressInfo')->middleware('\app\middleware\CheckToken');;//限制1秒只能请求一次
     Route::any('setMoney', 'setMoney')->middleware('\app\middleware\CheckToken');;//限制1秒只能请求一次
     Route::any('getUserInfo', 'getUserInfo')->middleware('\app\middleware\CheckToken');;//限制1秒只能请求一次
+    Route::any('getUserInfoData', 'getUserInfoData');//限制1秒只能请求一次
 })->prefix('apis/user/');
 
 Route::group(function () {

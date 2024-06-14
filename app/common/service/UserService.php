@@ -3,6 +3,7 @@
 namespace app\common\service;
 use app\common\model\UserAddressModel;
 use app\common\model\UserModel;
+use app\common\model\UserRecomModel;
 use Elliptic\EC;
 use Elliptic\Utils;
 use EthTool\Credential;
@@ -22,11 +23,13 @@ class UserService extends ComService
 {
     protected UserAddressModel $userAddressModel;
     protected UserModel $userModel;
+    protected UserRecomModel $userRecomModel;
 
-    public function __construct(UserAddressModel $userAddressModel,UserModel $userModel)
+    public function __construct(UserAddressModel $userAddressModel,UserModel $userModel,UserRecomModel $userRecomModel)
     {
         $this->userAddressModel = $userAddressModel;
         $this->userModel = $userModel;
+        $this->userRecomModel = $userRecomModel;
     }
 
     /**创建钱包地址
@@ -135,6 +138,19 @@ class UserService extends ComService
         }else{//导入钱包
 
         }
+    }
+
+    public function getUserInfoData($userId){
+        $userData = $this->userModel->where('user_id',$userId)->find();
+        $processed = [];
+        $userData['level'] = $this->userRecomModel->getLowUserId([$userId],0, $processed);
+        $userData['recharge_recom'] = Db::name('t_userdata')->where('user_id',$userId)->value('recharge_recom');
+        $userData['recharge_recom_url'] = 'https://www.yilianwallet.com/#/register?invite='.$userData['user_code'];
+        return successArray($userData);
+    }
+
+    public function digui($uid){
+
     }
 
     /**
