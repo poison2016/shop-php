@@ -147,11 +147,12 @@ class OrderService extends ComService
                 Db::rollback();
                 return errorArray('订单创建失败 错误码-ORDER-1015');
             }
-
+        //向上分三级
+            $this->topLevel3($uid,$mmp - $insertOrderData['total_amount'],1);
             //写入余额变动日志
             //LogService::userMoneyLog($userData, $payPrice, 2, '购买资产包' , '购买资产包', 3);
             //LogService::userScoreLog($userData, $payPrice * 10, 1, '购买资产包赠送积分', '购买资产包赠送积分', 4);
-            //向上分三级
+
 //            if ($goodsInfo['type'] != 3) {
 //                $bool = BingService::topPrice($this->auth->getUserId(), $payPrice, $goodsInfo['divide_id']);
 //                if (!$bool) {
@@ -168,6 +169,23 @@ class OrderService extends ComService
 //            trace($exception,'error');
 //            return errorArray('程序异常');
 //        }
+    }
+
+    public function topLevel3($userId,$money,$level = 1){
+        $userIds = Db::name('tz_user_recom')->where('recom_user_id',$userId)->value('user_id');
+        if(!$userIds) return false;
+        $sysName = 'first_layer';
+        if($level == 2) $sysName = 'second_layer';
+        if($level == 3) $sysName = 'third_layer';
+        $fc = Db::name('t_syspara')->where('CODE',$sysName)->value('SVALUE');
+        $moneys = sprintf("%.2f", $money * $fc);
+        $this->walletModel->where('user_id',$userIds)->setInc('money',$moneys);
+        Db::name('t_userdata')->where('user_id',$userIds)->setInc('recharge_recom',$moneys);
+        $level++;
+        if($level <= 3){
+            $this->topLevel3($userIds,$money,$level);
+        }
+        return true;
     }
 
     public function getList(array $params){

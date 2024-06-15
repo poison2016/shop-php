@@ -145,7 +145,7 @@ class UserService extends ComService
         $processed = [];
         $userData['level'] = $this->userRecomModel->getLowUserId([$userId],0, $processed);
         $userData['recharge_recom'] = Db::name('t_userdata')->where('user_id',$userId)->value('recharge_recom');
-        $userData['recharge_recom_url'] = 'https://www.yilianwallet.com/#/register?invite='.$userData['user_code'];
+        $userData['recharge_recom_url'] = 'https://www.yilianwallet.com/#/register?usercode='.$userData['user_code'];
         return successArray($userData);
     }
 
