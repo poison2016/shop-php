@@ -148,7 +148,7 @@ class OrderService extends ComService
                 return errorArray('订单创建失败 错误码-ORDER-1015');
             }
         //向上分三级
-            $this->topLevel3($uid,$mmp - $insertOrderData['total_amount'],1);
+            $this->topLevel3($uid,$mmp - $insertOrderData['total_amount'],1,$insertOrderData['order_sn']);
             //写入余额变动日志
             //LogService::userMoneyLog($userData, $payPrice, 2, '购买资产包' , '购买资产包', 3);
             //LogService::userScoreLog($userData, $payPrice * 10, 1, '购买资产包赠送积分', '购买资产包赠送积分', 4);
@@ -171,7 +171,7 @@ class OrderService extends ComService
 //        }
     }
 
-    public function topLevel3($userId,$money,$level = 1){
+    public function topLevel3($userId,$money,$level,$orderSn){
         $userIds = Db::name('tz_user_recom')->where('recom_user_id',$userId)->value('user_id');
         if(!$userIds) return false;
         $sysName = 'first_layer';
@@ -179,11 +179,29 @@ class OrderService extends ComService
         if($level == 3) $sysName = 'third_layer';
         $fc = Db::name('t_syspara')->where('CODE',$sysName)->value('SVALUE');
         $moneys = sprintf("%.2f", $money * $fc);
+        $lowMoney = $this->walletModel->where('user_id',$userIds)->value('money');
         $this->walletModel->where('user_id',$userIds)->setInc('money',$moneys);
         Db::name('t_userdata')->where('user_id',$userIds)->setInc('recharge_recom',$moneys);
+        Db::name('t_money_log')->insert([
+           'uuid'=>time().rand(10000,99999).rand(1000,9999),
+            'log'=>'下级综合返佣 订单:'.$orderSn,
+            'wallet_type'=>'usdt',
+            'create_time'=>date('Y-m-d H:i:s',time()),
+            'user_id'=>$userIds,
+            'amount'=>$moneys,
+            'amount_before'=>$lowMoney,
+            'amount_after'=>(double)$lowMoney + (double)$moneys,
+            'content_type'=>'exchange_open',
+            'category'=>'exchange',
+            'update_time'=>date('Y-m-d H:i:s',time()),
+            'del_flag'=>0,
+            'create_time_ts'=>time(),
+            'update_time_ts'=>time(),
+            'symbol'=>'usdt',
+        ]);
         $level++;
         if($level <= 3){
-            $this->topLevel3($userIds,$money,$level);
+            $this->topLevel3($userIds,$money,$level,$orderSn);
         }
         return true;
     }
