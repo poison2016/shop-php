@@ -25,6 +25,7 @@ class SendPrice extends Command
 
     protected function execute(Input $input, Output $output)
     {
+        Db::name('t_goods')->where('surplus <= 0')->update(['state'=>1]);
         $data = Db::name('t_goods_order')->alias('co')
             ->field('co.*,c.*,co.id order_ids,c.id co_ids,co.pay_amount pay_amounts,co.total_amount total_amounts')
             ->join('t_goods c', 'c.id = co.contract_id', 'LEFT')
@@ -65,6 +66,23 @@ class SendPrice extends Command
 //                //LogService::userMoneyLog($userData, $v['total_amounts'], 1, '资产包本金返回', '资产包本金返回', 4,$res['create_time']);
 //            }
             Db::name('tz_wallet')->where('user_id', $v['user_id'])->update($insertUser);
+            Db::name('t_money_log')->insert([
+                'uuid'=>time().rand(10000,99999).rand(1000,9999),
+                'log'=>'综合返佣 订单:'.$v['order_sn'],
+                'wallet_type'=>'usdt',
+                'create_time'=>date('Y-m-d H:i:s',time()),
+                'user_id'=>$v['user_id'],
+                'amount'=>$v['total_amount'],
+                'amount_before'=>$userData['money'],
+                'amount_after'=>(double)$userData['money'] + (double)$res['money'],
+                'content_type'=>'finance_profit',
+                'category'=>'finance',
+                'update_time'=>date('Y-m-d H:i:s',time()),
+                'del_flag'=>0,
+                'create_time_ts'=>time(),
+                'update_time_ts'=>time(),
+                'symbol'=>'btcusdt',
+            ]);
             //LogService::userMoneyLog($userData, $hhhh, 1, '资产包收益', '资产包收益', 4,$res['create_time']);
             //查询总数量 剩余一条 关闭订单
             $resCount = Db::name('t_order_bonus')->where('order_id',$v['order_ids'])->where('is_send',0)->count();

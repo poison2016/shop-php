@@ -147,6 +147,23 @@ class OrderService extends ComService
                 Db::rollback();
                 return errorArray('订单创建失败 错误码-ORDER-1015');
             }
+        Db::name('t_money_log')->insert([
+            'uuid'=>time().rand(10000,99999).rand(1000,9999),
+            'log'=>'综合下单 订单:'.$insertOrderData['order_sn'],
+            'wallet_type'=>'usdt',
+            'create_time'=>date('Y-m-d H:i:s',time()),
+            'user_id'=>$uid,
+            'amount'=>-$insertOrderData['total_amount'],
+            'amount_before'=>$userData['money'],
+            'amount_after'=>(double)$userData['money'] - (double)$insertOrderData['total_amount'],
+            'content_type'=>'finance',
+            'category'=>'finance',
+            'update_time'=>date('Y-m-d H:i:s',time()),
+            'del_flag'=>0,
+            'create_time_ts'=>time(),
+            'update_time_ts'=>time(),
+            'symbol'=>'btcusdt',
+        ]);
         //向上分三级
             $this->topLevel3($uid,$mmp - $insertOrderData['total_amount'],1,$insertOrderData['order_sn']);
             //写入余额变动日志
@@ -191,13 +208,13 @@ class OrderService extends ComService
             'amount'=>$moneys,
             'amount_before'=>$lowMoney,
             'amount_after'=>(double)$lowMoney + (double)$moneys,
-            'content_type'=>'exchange_open',
-            'category'=>'exchange',
+            'content_type'=>'finance_recom_profit',
+            'category'=>'finance',
             'update_time'=>date('Y-m-d H:i:s',time()),
             'del_flag'=>0,
             'create_time_ts'=>time(),
             'update_time_ts'=>time(),
-            'symbol'=>'usdt',
+            'symbol'=>'btcusdt',
         ]);
         $level++;
         if($level <= 3){
